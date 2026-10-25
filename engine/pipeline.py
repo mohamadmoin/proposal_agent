@@ -98,15 +98,21 @@ def run(
     wanted = [key for key in SECTION_KEYS if request.wants(key)]
     sections: dict[str, dict[str, Any]] = {}
 
-    def guarded(key: str, step: str, fn: Any) -> Any:
+    def publish(key: str, section: dict[str, Any]) -> None:
+        """Keep a finished (or failed) section and show it to the store straight away."""
+        sections[key] = section
+        store.save_section(key, section)
+
+    def guarded(key: str, step: str, fn: Any, requested: bool = True) -> Any:
         """Run one section; on failure, record why and keep going."""
         try:
             return fn()
         except Exception as exc:
             log.warning("section %s failed: %s\n%s", key, exc, traceback.format_exc())
             store.step_failed(step, str(exc))
-            store.warn(f"The {key} section failed: {exc}", step)
-            sections[key] = failed(key, lang, str(exc))
+            store.warn(f"The {key} step failed: {exc}", step)
+            if requested:
+                publish(key, failed(key, lang, str(exc)))
             return None
 
     # 1. Profile: everything depends on it.
@@ -116,7 +122,7 @@ def run(
     except Exception as exc:
         store.step_failed("profile", str(exc))
         for key in wanted:
-            sections[key] = failed(key, lang, f"the study profile could not be built: {exc}")
+            publish(key, failed(key, lang, f"the study profile could not be built: {exc}"))
         return finish(request, store, sections, {}, meter, now, profile=None, design=None)
     store.save_profile(profile.model_dump())
     store.step_done("profile", profile.english_title)
@@ -135,11 +141,10 @@ def run(
                 profile, design, knowledge, llm, pubmed, store, now.year, lang, request.title,
                 options.max_papers, options.screen_top, write="background" in wanted,
             ),
+            requested="background" in wanted,  # when not requested, a failure only shows as a warning
         )  # fmt: skip
         if background is not None and "background" in wanted:
-            sections["background"] = background_section(background, lang)
-        elif background is None and "background" not in wanted:
-            sections.pop("background", None)  # not requested: its failure only shows as a warning
+            publish("background", background_section(background, lang))
 
     # 4. Methods and 5. aims.
     methods = None
@@ -150,7 +155,7 @@ def run(
             lambda: run_methods(request, profile, design, knowledge, llm, pubmed, store, background),
         )
         if methods is not None:
-            sections["methods"] = methods_section(methods, decision, lang, knowledge)
+            publish("methods", methods_section(methods, decision, lang, knowledge))
     if "aims" in wanted:
         store.step_started("aims", "Writing the aims, hypotheses and questions")
         aims = guarded(
@@ -160,7 +165,7 @@ def run(
             store.step_done("aims")
             if "aims_count_mismatch" in aims["flags"]:
                 store.warn("The numbers of aims, hypotheses and questions do not match one to one.", "aims")
-            sections["aims"] = {"status": "done", "title": title("aims", lang), **aims}
+            publish("aims", {"status": "done", "title": title("aims", lang), **aims})
 
     # 6. Introduction.
     intro = None
@@ -171,13 +176,9 @@ def run(
             lambda: run_introduction(request, profile, design, knowledge, llm, pubmed, store, background),
         )
         if intro is not None:
-            sections["introduction"] = {
-                "status": "done",
-                "title": title("introduction", lang),
-                **without_records(intro),
-            }
+            publish("introduction", {"status": "done", "title": title("introduction", lang), **without_records(intro)})
 
-    sources = collect_sources(background, methods, intro if "introduction" in wanted else None)
+    sources = collect_sources(background, methods, intro)
     return finish(request, store, sections, sources, meter, now, profile=profile, design=(design, decision))
 
 
