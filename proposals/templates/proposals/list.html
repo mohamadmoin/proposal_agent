@@ -1,0 +1,18 @@
+{% extends "proposals/base.html" %}
+{% block title %}Recent proposals · Proposal Agent{% endblock %}
+{% block content %}
+<h1>Recent proposals</h1>
+{% if proposals %}
+<ul class="proposal-list">
+  {% for p in proposals %}
+  <li class="card">
+    <a href="{% url 'proposal_detail' p.id %}" dir="auto" lang="{{ p.language }}">{{ p.title }}</a>
+    <span class="meta"><span class="badge status-{{ p.status }}">{{ p.get_status_display }}</span>
+      <time datetime="{{ p.created_at|date:'c' }}">{{ p.created_at|date:"Y-m-d H:i" }}</time></span>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No proposals yet. <a href="/">Draft the first one.</a></p>
+{% endif %}
+{% endblock %}

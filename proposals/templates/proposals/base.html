@@ -1,0 +1,33 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Proposal Agent{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="{% static 'proposals/app.css' %}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="/">Proposal Agent</a>
+      <nav aria-label="Main">
+        <a href="/">New proposal</a>
+        <a href="/p/">Recent</a>
+        <a href="/api/docs">API</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer wrap">
+    <p>A drafting tool. The researcher is the author and checks every sentence, number and reference.
+      Evidence from PubMed via NCBI E-utilities.</p>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

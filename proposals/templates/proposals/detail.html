@@ -1,0 +1,36 @@
+{% extends "proposals/base.html" %}
+{% load static %}
+{% block title %}{{ proposal.title|truncatechars:60 }} · Proposal Agent{% endblock %}
+{% block content %}
+<article id="proposal" data-status-url="{% url 'proposal_status' proposal.id %}"
+         data-docx-url="{% url 'proposal_docx' proposal.id %}" data-language="{{ proposal.language }}">
+  <header class="proposal-head">
+    <h1 dir="auto" lang="{{ proposal.language }}">{{ proposal.title }}</h1>
+    <p class="meta">
+      <span id="status-badge" class="badge status-{{ proposal.status }}" role="status" aria-live="polite">{{ proposal.get_status_display }}</span>
+      <time datetime="{{ proposal.created_at|date:'c' }}">{{ proposal.created_at|date:"Y-m-d H:i" }}</time>
+      <a id="docx-link" class="button" href="{% url 'proposal_docx' proposal.id %}" hidden>Download .docx</a>
+    </p>
+    {% if demo.fake_llm %}<p class="notice small">Demo mode: the text below comes from the built-in fake model.</p>{% endif %}
+  </header>
+
+  <section id="progress" class="card" aria-labelledby="progress-title">
+    <details id="progress-details" open>
+      <summary><h2 id="progress-title" class="inline-heading">Progress</h2></summary>
+      <ol id="steps" class="steps"></ol>
+    </details>
+    <noscript><p>This page needs JavaScript to show live progress. Reload it to see the latest state.</p></noscript>
+  </section>
+
+  <section id="warnings" class="card warn" hidden aria-labelledby="warnings-title">
+    <h2 id="warnings-title">Please check</h2>
+    <ul id="warning-list"></ul>
+  </section>
+
+  <section id="results" hidden>
+    <div class="tabs" role="tablist" aria-label="Proposal sections" id="tablist"></div>
+    <div id="panels"></div>
+  </section>
+</article>
+{% endblock %}
+{% block scripts %}<script src="{% static 'proposals/detail.js' %}" defer></script>{% endblock %}

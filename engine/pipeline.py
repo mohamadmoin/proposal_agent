@@ -248,6 +248,8 @@ def ordered_texts(sections: dict[str, dict[str, Any]]) -> list[tuple[tuple[str, 
     if methods and methods["status"] == "done":
         for i, sub in enumerate(methods["subsections"]):
             items.append((("methods", "subsections", str(i)), sub["text"]))
+        if methods.get("sample_size"):  # the worked calculation shown next to ۳-۳ cites its sources too
+            items.append((("methods", "sample_size", "worked"), methods["sample_size"]["worked"]))
     return items
 
 
@@ -255,6 +257,9 @@ def put_back(sections: dict[str, dict[str, Any]], location: tuple[str, ...], tex
     section, key, *index = location
     if not index:
         sections[section][key] = text
+        return
+    if not index[0].isdigit():  # a named field inside a dict, e.g. ("methods", "sample_size", "worked")
+        sections[section][key][index[0]] = text
         return
     target = sections[section][key][int(index[0])]
     if isinstance(target, dict):

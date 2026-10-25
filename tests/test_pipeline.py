@@ -18,7 +18,7 @@ def all_texts(result):
     sections = result["sections"]
     texts = [sections["introduction"]["text"], sections["aims"]["main_aim"]]
     texts += [p["text"] for p in sections["background"]["paragraphs"]]
-    texts += [s["text"] for s in sections["methods"]["subsections"]]
+    texts += [s["text"] for s in sections["methods"]["subsections"]] + [sections["methods"]["sample_size"]["worked"]]
     return texts
 
 

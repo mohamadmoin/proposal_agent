@@ -108,7 +108,6 @@ def run_introduction(
     store.step_done("introduction_studies")
     return {
         "text": "\n\n".join(p.strip() for p in (part_12, part_34) if p.strip()),
-        "parts": {"problem_and_solution": part_12.strip(), "studies_and_gap": part_34.strip()},
         "source_origin": origin,
         "sources": [
             {

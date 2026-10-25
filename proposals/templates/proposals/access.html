@@ -1,0 +1,16 @@
+{% extends "proposals/base.html" %}
+{% block title %}Access code · Proposal Agent{% endblock %}
+{% block content %}
+<h1>Access code</h1>
+<p>This installation asks for an access code once per session.</p>
+{% if error %}<div class="error" role="alert" id="code-error">{{ error }}</div>{% endif %}
+<form method="post" class="card form">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ next }}">
+  <div class="field">
+    <label for="code">Code</label>
+    <input id="code" name="code" type="password" required autocomplete="current-password" {% if error %}aria-describedby="code-error"{% endif %}>
+  </div>
+  <button type="submit" class="button primary">Continue</button>
+</form>
+{% endblock %}

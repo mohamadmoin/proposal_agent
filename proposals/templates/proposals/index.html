@@ -1,0 +1,69 @@
+{% extends "proposals/base.html" %}
+{% load static %}
+{% block content %}
+<h1>Draft a research proposal</h1>
+<p class="lead">Type your study title. The app searches PubMed for strictly similar studies and drafts the
+  introduction, aims, background (پیشینه) and methods (۳-۱ … ۳-۵), with every citation pointing to a real record.</p>
+
+{% if demo.fake_llm or demo.offline_pubmed %}
+<div class="notice" role="note">
+  <strong>Demo mode.</strong>
+  {% if demo.fake_llm %}Answers come from a built-in fake model (placeholder text, no API key needed).{% endif %}
+  {% if demo.offline_pubmed %}PubMed is served from saved test records about vitamin D in pregnancy.{% endif %}
+  <br>Try this title: <span class="example" lang="fa" dir="rtl">شیوع کمبود ویتامین D در زنان باردار مراجعه‌کننده به مراکز بهداشتی تهران</span>
+</div>
+{% endif %}
+
+{% if error %}<div class="error" role="alert" id="form-error">{{ error }}</div>{% endif %}
+
+<form method="post" enctype="multipart/form-data" class="card form" {% if error %}aria-describedby="form-error"{% endif %}>
+  {% csrf_token %}
+  <div class="field">
+    <label for="title">Study title <span class="req">(required, Persian or English)</span></label>
+    <textarea id="title" name="title" rows="2" required minlength="5" maxlength="300" dir="auto">{{ values.title|default:"" }}</textarea>
+  </div>
+
+  <div class="field">
+    <label for="purpose">Purpose <span class="hint">(optional)</span></label>
+    <textarea id="purpose" name="purpose" rows="3" maxlength="2000" dir="auto">{{ values.purpose|default:"" }}</textarea>
+  </div>
+
+  <div class="field">
+    <label for="design">Study design</label>
+    <select id="design" name="design">
+      <option value="">Let the app decide (answers 12 design questions)</option>
+      {% for value, label in designs %}
+      <option value="{{ value }}" {% if values.design == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field" id="other-name-field" {% if values.design != "other" %}hidden{% endif %}>
+    <label for="design_other_name">Name of the design</label>
+    <input id="design_other_name" name="design_other_name" maxlength="100" dir="auto"
+           value="{{ values.design_other_name|default:'' }}" placeholder="e.g. Diagnostic accuracy study">
+  </div>
+
+  <fieldset class="field">
+    <legend>Output language</legend>
+    <label class="inline"><input type="radio" name="language" value="fa" {% if values.language != "en" %}checked{% endif %}> فارسی</label>
+    <label class="inline"><input type="radio" name="language" value="en" {% if values.language == "en" %}checked{% endif %}> English</label>
+  </fieldset>
+
+  <fieldset class="field">
+    <legend>Sections to write</legend>
+    {% for key, label in sections %}
+    <label class="inline"><input type="checkbox" name="sections" value="{{ key }}" {% if key in values.sections %}checked{% endif %}> {{ label }}</label>
+    {% endfor %}
+  </fieldset>
+
+  <div class="field">
+    <label for="statpearls_file">StatPearls page <span class="hint">(optional, .html saved from your own browser, ≤ 3 MB)</span></label>
+    <input id="statpearls_file" name="statpearls_file" type="file" accept=".html,.htm,text/html" aria-describedby="statpearls-help">
+    <p id="statpearls-help" class="hint">Without it, the introduction uses the chapter summary and reference list from the
+      PubMed API. The app never downloads StatPearls or Bookshelf pages itself.</p>
+  </div>
+
+  <button type="submit" class="button primary">Draft my proposal</button>
+</form>
+{% endblock %}
+{% block scripts %}<script src="{% static 'proposals/form.js' %}" defer></script>{% endblock %}

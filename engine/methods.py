@@ -225,6 +225,13 @@ def topic_evidence(
     return evidence
 
 
+def tokens_to_pmids(text: str, papers: list[tuple[str, PaperRecord]]) -> str:
+    """For the stored trace: {M3} → (PMID 123). These summaries are notes, not proposal text, so they are not
+    numbered (numbering them would add references the document never cites)."""
+    pmids = {token: record.pmid for token, record in papers}
+    return TOKEN_RE.sub(lambda m: f"(PMID {pmids[m.group(0)[1:-1]]})" if m.group(0)[1:-1] in pmids else "", text)
+
+
 def summaries_text(evidence: list[TopicEvidence]) -> str:
     return "\n".join(f"- {e.topic}: {e.summary}" for e in evidence) or "none"
 
@@ -507,7 +514,7 @@ def run_methods(
             {
                 "topic": e.topic,
                 "query": e.query,
-                "summary": e.summary,
+                "summary": tokens_to_pmids(e.summary, e.papers),
                 "flags": e.flags,
                 "papers": [{"token": t, "pmid": r.pmid, "title": r.title} for t, r in e.papers],
             }
