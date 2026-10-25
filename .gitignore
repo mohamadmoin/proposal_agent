@@ -1,0 +1,23 @@
+# Secrets and local settings
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Local data, reports and generated files
+var/
+staticfiles/
+*.sqlite3
+*.docx
+!tests/fixtures/**/*.docx
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/

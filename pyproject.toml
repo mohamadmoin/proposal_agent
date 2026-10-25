@@ -1,0 +1,20 @@
+[project]
+name = "proposal-agent"
+version = "0.1.0"
+description = "Drafts research-proposal sections for medical researchers from PubMed evidence."
+requires-python = ">=3.12"
+license = "MIT"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["proposals/migrations"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings_test"
+testpaths = ["tests"]
+addopts = "-q"

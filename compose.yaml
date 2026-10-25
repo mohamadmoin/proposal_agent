@@ -1,0 +1,57 @@
+# docker compose up --build   → MySQL + web (http://localhost:${WEB_PORT:-8000}) + one worker.
+# Scale the workers with: docker compose up --scale worker=3
+name: proposal_agent
+
+x-app: &app
+  build: .
+  image: proposal_agent:local
+  env_file: .env
+  restart: unless-stopped
+  init: true   # a tiny init process forwards SIGTERM to Python (PID 1 would ignore it)
+
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-proposal_agent}
+      MYSQL_USER: ${MYSQL_USER:-proposal}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-proposal-demo-password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root-demo-password}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - db_data:/var/lib/mysql
+    # The MySQL port is deliberately not published to the host: only the app containers talk to it.
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  web:
+    <<: *app
+    command: ["sh", "-c", "python manage.py migrate --noinput && exec gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 60 --access-logfile -"]
+    ports:
+      - "${WEB_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/healthz', timeout=4)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  worker:
+    <<: *app
+    command: ["python", "manage.py", "run_worker"]
+    # The worker finishes its current proposal on SIGTERM before exiting; give it time.
+    stop_grace_period: 5m
+    depends_on:
+      web:
+        condition: service_healthy   # web has run the migrations by then
+
+volumes:
+  db_data:
