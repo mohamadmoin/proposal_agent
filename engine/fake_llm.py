@@ -250,7 +250,7 @@ class FakeBackend:
         baseline = []
         for attrs, body in papers:
             for sentence in split_sentences(body.split("Abstract:", 1)[-1]):
-                match = re.search(r"(\d+(?:\.\d+)?)\s?%", sentence)
+                match = re.search(r"(\d+(?:\.\d+)?)\s?%(?!\s*(?:CI|confidence))", sentence)
                 if match:
                     baseline.append(
                         {

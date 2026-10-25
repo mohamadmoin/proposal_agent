@@ -96,24 +96,42 @@ def test_offline_search_is_deterministic_and_typed():
     assert all(2022 <= r.year <= 2026 for r in pubmed.efetch(recent.pmids))
 
 
-def test_rate_limiter_spaces_parallel_calls():
+class FrozenClock:
+    """time.monotonic() that never moves and a sleep() that only records how long it was asked to wait."""
+
+    def __init__(self):
+        self.delays = []
+        self.lock = threading.Lock()
+
+    def monotonic(self):
+        return 100.0
+
+    def sleep(self, seconds):
+        with self.lock:
+            self.delays.append(round(seconds, 3))
+
+
+def test_rate_limiter_gives_parallel_callers_spaced_slots(monkeypatch):
+    import engine.pubmed as pubmed_module
+
+    clock = FrozenClock()
+    monkeypatch.setattr(pubmed_module, "time", clock)
     limiter = RateLimiter(per_second=20, min_gap=0.05)
-    stamps = []
-    lock = threading.Lock()
-
-    def hit():
-        limiter.wait()
-        with lock:
-            stamps.append(time.monotonic())
-
-    threads = [threading.Thread(target=hit) for _ in range(5)]
+    threads = [threading.Thread(target=limiter.wait) for _ in range(5)]
     for t in threads:
         t.start()
     for t in threads:
         t.join()
-    stamps.sort()
-    gaps = [b - a for a, b in zip(stamps, stamps[1:], strict=False)]
-    assert min(gaps) >= 0.045
+    # The first caller goes at once; each later caller waits one more interval: no bursts.
+    assert sorted(clock.delays) == [0.05, 0.1, 0.15, 0.2]
+
+
+def test_rate_limiter_really_waits():
+    limiter = RateLimiter(per_second=50, min_gap=0.05)
+    start = time.monotonic()
+    for _ in range(3):
+        limiter.wait()
+    assert time.monotonic() - start >= 0.095
 
 
 def test_rate_limiter_respects_the_110_ms_floor():

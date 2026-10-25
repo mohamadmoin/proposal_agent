@@ -517,6 +517,7 @@ def run_methods(
         "sample_size": size,
         "sample_size_error": size_error,
         "subsections": subsections,
+        "source_records": {t: r for e in evidence for t, r in e.papers},
     }
 
 
