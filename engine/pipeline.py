@@ -20,7 +20,7 @@ from engine.knowledge import DesignChoice, Knowledge
 from engine.llm import LLM, describe_error
 from engine.methods import decide_design, run_methods, write_aims
 from engine.profile import build_profile
-from engine.pubmed import PubMed
+from engine.pubmed import OfflinePubMed, PubMed
 from engine.references import number_document
 from engine.schemas import SECTION_KEYS, PaperRecord, ProposalRequest, StudyProfileOut
 from engine.store import Store
@@ -100,6 +100,10 @@ def run(
     knowledge = knowledge or llm.knowledge
     meter = UsageMeter(store)
     llm = llm.with_recorder(meter)
+    if isinstance(pubmed, OfflinePubMed) and llm.config.provider != "fake":
+        # a real model on saved test records gives poor, misleading results without any error
+        store.warn("PubMed is in offline demo mode (PUBMED_OFFLINE=1): papers come from saved test records, not from "
+                   "PubMed. Set PUBMED_OFFLINE=0 for real proposals.", "background")
     lang = request.language
     wanted = [key for key in SECTION_KEYS if request.wants(key)]
     sections: dict[str, dict[str, Any]] = {}

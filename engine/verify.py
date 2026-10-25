@@ -22,7 +22,8 @@ ABBREVIATIONS = {
 }  # fmt: skip
 
 TOKEN_RE = re.compile(r"\{[A-Z]\d+\}")
-NUMBER_RE = re.compile(r"(?<![\w.])(\d+(?:,\d{3})+(?:\.\d+)?|\d*\.\d+|\d+)(\s?%)?")
+# a percentage may be written "45%", "45 %", "45 percent", "45 per cent" or «۴۵ درصد»
+NUMBER_RE = re.compile(r"(?<![\w.])(\d+(?:,\d{3})+(?:\.\d+)?|\d*\.\d+|\d+)(\s?%|\s(?:percent|per\s?cent|درصد)\b)?", re.IGNORECASE)
 BOUNDARY_RE = re.compile(r"[.!?؟]+[\"')\]»”]*\s+")
 
 

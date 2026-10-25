@@ -88,3 +88,11 @@ def test_evidence_checks():
     assert not valid_evidence([4], 3)
     assert not valid_evidence([], 3)
     assert evidence_text([3, 1], sentences) == "C. A."
+
+
+def test_percent_written_as_a_word_counts_both_ways():
+    from engine.verify import number_set
+
+    assert "0.038" in number_set("the prevalence of IDA was 3.8 percent")
+    assert "0.25" in number_set("25 per cent of students")
+    assert "0.4" in number_set("شیوع ۴۰ درصد بود")
