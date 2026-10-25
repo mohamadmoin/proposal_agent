@@ -1,0 +1,217 @@
+# Study-design templates.
+#
+# The design decides two things:
+#   1. what methodological evidence to look for (search_topics, one PubMed search each), and
+#   2. how each methods sub-section is written (sections.<id>.fa / .en are the instructions given to the writer).
+# These topics read like STROBE / CONSORT / TREND / PRISMA items turned into searches.
+#
+# pubmed_filter: added to the study's core query to find studies with the same design (background search).
+# sample_size:   the formulas the sample-size step may choose from (see knowledge/sample_size.md).
+# Add a design by copying a block; tests check that every design has all five sections in both languages.
+
+sections:   # the fixed skeleton of the methods chapter (Iranian university proposal form)
+  - id: conduct
+    fa: "۳-۱ روش اجرا"
+    en: "3.1 Study conduct"
+  - id: population
+    fa: "۳-۲ جامعه و نمونه پژوهش"
+    en: "3.2 Study population and sample"
+  - id: sample_size
+    fa: "۳-۳ حجم نمونه و روش نمونه‌گیری"
+    en: "3.3 Sample size and sampling"
+  - id: data_collection
+    fa: "۳-۴ روش و ابزار جمع‌آوری داده‌ها"
+    en: "3.4 Data collection methods and tools"
+  - id: analysis
+    fa: "۳-۵ روش تجزیه و تحلیل داده‌ها"
+    en: "3.5 Data analysis"
+
+designs:
+  cross_sectional:
+    name: {fa: "مطالعه مقطعی", en: "Cross-sectional study"}
+    pubmed_filter: '"Cross-Sectional Studies"[mh] OR cross-sectional[tiab] OR prevalence[tiab]'
+    search_topics:
+      - prevalence estimation methods
+      - cross sectional sample size
+      - risk factor measurement tools
+      - confounding in cross sectional
+      - survey questionnaire validation
+    sample_size: [single_proportion, single_mean, two_proportions, two_means, correlation]
+    sections:
+      conduct:
+        fa: "نحوه اجرای مطالعه مقطعی را تشریح کنید؛ شامل نحوه انتخاب نمونه‌ها در یک زمان معین، استفاده از پرسشنامه یا چک‌لیست و زمان‌بندی گردآوری داده‌ها. بدون ذکر موارد اضافی."
+        en: "Describe how the cross-sectional study will be conducted: how participants are selected at one point in time, the questionnaire or checklist used, and the timing of data collection. Nothing beyond this."
+      population:
+        fa: "جامعه آماری مطالعه (افراد واجد شرایط) را توضیح دهید و شیوه نمونه‌گیری (تصادفی ساده، خوشه‌ای، طبقه‌بندی‌شده یا در دسترس) و معیارهای ورود و خروج را بیان کنید. در صورت نیاز نحوه تشخیص بیماران را بیان کنید. در حد چند پاراگراف."
+        en: "Describe the study population (eligible people), the sampling method (simple random, cluster, stratified or convenience) and the inclusion and exclusion criteria. If needed, state how patients are diagnosed. A few paragraphs."
+      sample_size:
+        fa: "فرمول محاسبه حجم نمونه را بیان کنید و محاسبه انجام‌شده را همراه با پارامترهای آماری (مثلاً شیوع مورد انتظار، d و α) و منبع هر پارامتر شرح دهید. سپس روش نمونه‌گیری را به تفصیل بیان کنید. عدد نهایی حجم نمونه را دقیقاً همان‌طور که داده شده ذکر کنید."
+        en: "State the sample-size formula and explain the calculation with its statistical parameters (e.g. expected prevalence, d, α) and the source of each parameter. Then describe the sampling procedure in detail. Give the final sample size exactly as provided."
+      data_collection:
+        fa: "ابزار و روش گردآوری داده‌ها را شرح دهید (مثلاً پرسشنامه، مصاحبه، ثبت اطلاعات از پرونده‌ها؛ سایر موارد را بر اساس مطالعات مشابه اضافه کنید). در مورد روایی و پایایی ابزارها و نحوه اجرای آن‌ها (مکان و زمان) توضیح دهید."
+        en: "Describe the data-collection tools and procedure (e.g. questionnaire, interview, extraction from records; add others based on similar studies). Explain the validity and reliability of the tools and how they are administered (place and time)."
+      analysis:
+        fa: "نرم‌افزار آماری مورد استفاده را معرفی کنید. ابتدا آمار توصیفی (فراوانی و درصد برای متغیرهای کیفی، میانگین و انحراف معیار یا میانه برای متغیرهای کمی) و سپس روش‌های تحلیلی (آزمون‌های مقایسه‌ای، رگرسیون لجستیک یا خطی) را توضیح دهید. نحوه کنترل متغیرهای مخدوش‌کننده را ذکر کنید."
+        en: "Name the statistical software. Describe descriptive statistics first (counts and percentages for categorical variables, mean and SD or median for continuous ones), then the analytical methods (comparison tests, logistic or linear regression). State how confounders are controlled."
+
+  case_control:
+    name: {fa: "مطالعه مورد-شاهدی", en: "Case-control study"}
+    pubmed_filter: '"Case-Control Studies"[mh] OR case-control[tiab] OR "case control"[tiab]'
+    search_topics:
+      - case definition methodology
+      - control selection bias
+      - odds ratio analysis
+      - matched case control design
+      - recall bias in questionnaires
+    sample_size: [case_control_unmatched, two_proportions]
+    sections:
+      conduct:
+        fa: "کلیات روش مطالعه مورد-شاهدی، از جمله زمان‌بندی گذشته‌نگر (رفتن به عقب برای تعیین مواجهه) را بیان کنید."
+        en: "Describe the overall conduct of the case-control study, including its retrospective timing (looking back to determine exposure)."
+      population:
+        fa: "جمعیت مورد مطالعه، نحوه شناسایی موارد (Case) و انتخاب شاهدها (Control) را همراه با معیارهای ورود و خروج بیان کنید. در صورت نیاز نحوه تشخیص بیماران را بیان کنید. در حد چند پاراگراف."
+        en: "Describe the study population, how cases are identified and controls are selected, with the inclusion and exclusion criteria. If needed, state how patients are diagnosed. A few paragraphs."
+      sample_size:
+        fa: "مبنای محاسبه حجم نمونه در مطالعه مورد-شاهدی (شیوع مواجهه در گروه شاهد و OR مورد انتظار) و محاسبه انجام‌شده را همراه با منبع هر پارامتر شرح دهید. روش انتخاب موارد و شاهدها را توضیح دهید. عدد نهایی حجم نمونه را دقیقاً همان‌طور که داده شده ذکر کنید."
+        en: "Explain the basis of the case-control sample size (exposure prevalence among controls and the expected odds ratio) and the calculation, with the source of each parameter. Describe how cases and controls are selected. Give the final sample size exactly as provided."
+      data_collection:
+        fa: "ابزارهای گردآوری داده (مثلاً پرسشنامه، مصاحبه، ثبت مواجهه از پرونده‌ها؛ سایر موارد بر اساس مطالعات مشابه) و راه‌های اطمینان از پایایی و کاهش خطای یادآوری را شرح دهید."
+        en: "Describe the data-collection tools (e.g. questionnaire, interview, exposure from records; others based on similar studies) and how reliability is ensured and recall bias reduced."
+      analysis:
+        fa: "تحلیل داده‌ها با نسبت شانس (Odds Ratio) و رگرسیون لجستیک، یا رگرسیون لجستیک شرطی در مطالعات همسان‌شده، را شرح دهید. ابتدا آمار توصیفی را بیان کنید. متغیرهای مخدوش‌کننده و نحوه کنترل آن‌ها را ذکر کنید."
+        en: "Describe the analysis with odds ratios and logistic regression, or conditional logistic regression for matched designs. Start with descriptive statistics. Name the confounders and how they are controlled."
+
+  cohort:
+    name: {fa: "مطالعه کوهورت", en: "Cohort study"}
+    pubmed_filter: '"Cohort Studies"[mh] OR cohort[tiab] OR prospective[tiab] OR "follow-up"[tiab]'
+    search_topics:
+      - incidence measurement approach
+      - prospective cohort timeline
+      - follow-up loss management
+      - exposure assessment methods
+      - risk ratio or hazard ratio
+    sample_size: [two_proportions, two_means]
+    sections:
+      conduct:
+        fa: "نحوه اجرای مطالعه کوهورت (آینده‌نگر یا گذشته‌نگر)، زمان شروع مواجهه و نحوه پیگیری رخداد پیامد را توضیح دهید."
+        en: "Describe how the cohort study is conducted (prospective or retrospective), when exposure starts and how the outcome is followed up."
+      population:
+        fa: "جمعیت در معرض (Exposed) و غیر در معرض (Non-exposed)، معیارهای ورود و خروج و روش انتخاب افراد را تعریف کنید. در صورت نیاز نحوه تشخیص بیماران را بیان کنید."
+        en: "Define the exposed and non-exposed groups, the inclusion and exclusion criteria and how participants are selected. If needed, state how patients are diagnosed."
+      sample_size:
+        fa: "فرمول محاسبه حجم نمونه بر اساس رخداد پیامد و تفاوت خطر بین دو گروه و محاسبه انجام‌شده را همراه با منبع هر پارامتر شرح دهید. روش نمونه‌گیری (طبقه‌بندی‌شده، خوشه‌ای، …) را بیان کنید. عدد نهایی حجم نمونه را دقیقاً همان‌طور که داده شده ذکر کنید."
+        en: "State the sample-size formula based on outcome incidence and the risk difference between the two groups, and explain the calculation with the source of each parameter. Describe the sampling method (stratified, cluster, …). Give the final sample size exactly as provided."
+      data_collection:
+        fa: "ابزار جمع‌آوری داده (مثلاً پرسشنامه، آزمایش بالینی، پیگیری حضوری یا تلفنی؛ بر اساس مطالعات مشابه انتخاب کنید) و فواصل زمانی پیگیری و ثبت داده‌ها را شرح دهید."
+        en: "Describe the data-collection tools (e.g. questionnaire, clinical tests, in-person or telephone follow-up; choose based on similar studies) and the follow-up and recording intervals."
+      analysis:
+        fa: "نرم‌افزار آماری و روش‌های تحلیلی (خطر نسبی RR، منحنی کاپلان-مایر، رگرسیون کاکس) را شرح دهید. ابتدا آمار توصیفی را بیان کنید. نحوه برخورد با ریزش و داده‌های گم‌شده را ذکر کنید."
+        en: "Describe the software and the analytical methods (relative risk, Kaplan–Meier curves, Cox regression). Start with descriptive statistics. State how loss to follow-up and missing data are handled."
+
+  randomized_controlled_trial:
+    name: {fa: "کارآزمایی بالینی تصادفی‌شده", en: "Randomised controlled trial"}
+    pubmed_filter: 'randomized controlled trial[pt] OR randomized[tiab] OR randomised[tiab]'
+    search_topics:
+      - randomization procedure
+      - blinding and allocation concealment
+      - sample size in RCT
+      - placebo or control group
+      - clinical trial endpoints
+    sample_size: [two_proportions, two_means]
+    sections:
+      conduct:
+        fa: "نحوه اجرای کارآزمایی بالینی تصادفی‌شده، روش تصادفی‌سازی (بلوکی، ساده) و زمان‌بندی مداخلات را توضیح دهید. جزئیات مداخله و گروه کنترل را بیان کنید. بدون ذکر مطالب اضافی."
+        en: "Describe how the randomised trial is conducted, the randomisation method (block, simple) and the timing of the interventions. Give the details of the intervention and the control. Nothing beyond this."
+      population:
+        fa: "جامعه هدف کارآزمایی، معیارهای ورود و خروج و نحوه ورود افراد به گروه مداخله و گروه کنترل را تعریف کنید. در صورت نیاز نحوه تشخیص بیماران را بیان کنید."
+        en: "Define the target population, the inclusion and exclusion criteria and how participants enter the intervention and control groups. If needed, state how patients are diagnosed."
+      sample_size:
+        fa: "روش محاسبه حجم نمونه (بر اساس توان آماری، اندازه اثر و α) و محاسبه انجام‌شده را همراه با منبع هر پارامتر شرح دهید. شیوه تخصیص (Allocation) و پنهان‌سازی تخصیص را بیان کنید. عدد نهایی حجم نمونه را دقیقاً همان‌طور که داده شده ذکر کنید."
+        en: "Explain the sample-size method (power, effect size and α) and the calculation with the source of each parameter. Describe allocation and allocation concealment. Give the final sample size exactly as provided."
+      data_collection:
+        fa: "ابزار یا روش جمع‌آوری داده‌ها (مثلاً پرسشنامه و اندازه‌گیری‌های بالینی؛ سایر موارد بر اساس مطالعات مشابه) و نحوه کورسازی (Blinding) شرکت‌کنندگان و ارزیابان را توضیح دهید."
+        en: "Describe the data-collection tools or methods (e.g. questionnaires and clinical measurements; others based on similar studies) and how participants and assessors are blinded."
+      analysis:
+        fa: "روش تحلیل بر اساس قصد درمان (Intention-to-treat) یا پروتکل، آزمون‌های آماری برای مقایسه میانگین‌ها و نسبت‌ها و مدیریت داده‌های گم‌شده را شرح دهید. ابتدا آمار توصیفی را بیان کنید."
+        en: "Describe intention-to-treat or per-protocol analysis, the tests for comparing means and proportions, and the handling of missing data. Start with descriptive statistics."
+
+  quasi_experimental:
+    name: {fa: "مطالعه نیمه‌تجربی", en: "Quasi-experimental study"}
+    pubmed_filter: '"Non-Randomized Controlled Trials as Topic"[mh] OR quasi-experimental[tiab] OR "before and after"[tiab] OR "pre-post"[tiab]'
+    search_topics:
+      - pre-post intervention design
+      - time series analysis method
+      - controlled before and after
+      - confounding in quasi-experiment
+      - intervention fidelity measurement
+    sample_size: [paired_mean, two_means, two_proportions]
+    sections:
+      conduct:
+        fa: "نحوه اجرای مطالعه نیمه‌تجربی (قبل و بعد، سری زمانی منقطع، …) و جزئیات مداخله را شرح دهید."
+        en: "Describe how the quasi-experimental study is conducted (before–after, interrupted time series, …) and the details of the intervention."
+      population:
+        fa: "جمعیت هدف مداخله و جمعیت شاهد (در صورت وجود) و معیارهای ورود و خروج را مشخص کنید."
+        en: "Define the target population of the intervention, the comparison population (if any) and the inclusion and exclusion criteria."
+      sample_size:
+        fa: "روش تخمین حجم نمونه و محاسبه انجام‌شده را همراه با منبع هر پارامتر شرح دهید، شیوه انتخاب افراد یا گروه‌ها را بیان کنید و علت عدم تصادفی‌سازی را ذکر کنید. عدد نهایی حجم نمونه را دقیقاً همان‌طور که داده شده ذکر کنید."
+        en: "Explain the sample-size estimate and the calculation with the source of each parameter, how individuals or groups are selected, and why randomisation is not used. Give the final sample size exactly as provided."
+      data_collection:
+        fa: "ابزارهای سنجش مداخله و پیامدها (پرسشنامه، مشاهده، شاخص‌های عینی) و پایایی آن‌ها را شرح دهید."
+        en: "Describe the tools for measuring the intervention and the outcomes (questionnaire, observation, objective indicators) and their reliability."
+      analysis:
+        fa: "روش‌های تحلیلی خاص مطالعه نیمه‌تجربی مانند مقایسه قبل و بعد، تحلیل سری زمانی و تفاوت در تفاوت‌ها و نحوه کنترل متغیرهای مخدوش‌کننده را شرح دهید. ابتدا آمار توصیفی را بیان کنید."
+        en: "Describe the analyses specific to quasi-experimental designs, such as before–after comparison, time-series analysis and difference-in-differences, and how confounders are controlled. Start with descriptive statistics."
+
+  systematic_review_or_meta_analysis:
+    name: {fa: "مرور نظام‌مند / فراتحلیل", en: "Systematic review / meta-analysis"}
+    pubmed_filter: 'systematic[sb] OR meta-analysis[pt]'
+    search_topics:
+      - systematic search strategy
+      - risk of bias tools
+      - PRISMA flow diagram
+      - inclusion exclusion criteria SR
+      - meta-analysis statistical model
+    sample_size: []   # no sample-size formula; the section explains study selection instead
+    sections:
+      conduct:
+        fa: "نحوه انجام مرور نظام‌مند، پایگاه‌های داده، بازه زمانی جستجو و پایبندی به چک‌لیست PRISMA را شرح دهید."
+        en: "Describe how the systematic review is conducted, the databases, the search period and adherence to the PRISMA checklist."
+      population:
+        fa: "مفهوم جامعه در مرور نظام‌مند (مطالعات واجد شرایط) و معیارهای ورود و خروج مطالعات بر اساس PICO را بیان کنید."
+        en: "Explain what the population means in a systematic review (eligible studies) and the study inclusion and exclusion criteria based on PICO."
+      sample_size:
+        fa: "نحوه غربالگری و انتخاب نهایی مقالات (عنوان، چکیده، متن کامل؛ دو داور مستقل) و راهبرد جستجو را توضیح دهید. این طراحی فرمول حجم نمونه ندارد."
+        en: "Explain the screening and final selection of articles (title, abstract, full text; two independent reviewers) and the search strategy. This design has no sample-size formula."
+      data_collection:
+        fa: "نحوه استخراج داده‌ها (فرم استخراج) و ارزیابی کیفیت و خطر سوگیری (Cochrane RoB 2، Newcastle–Ottawa) را شرح دهید."
+        en: "Describe data extraction (extraction form) and the quality and risk-of-bias assessment (Cochrane RoB 2, Newcastle–Ottawa)."
+      analysis:
+        fa: "روش فراتحلیل (مدل اثر ثابت یا تصادفی)، آماره‌های ناهمگونی (I²)، بررسی سوگیری انتشار و آنالیز حساسیت را شرح دهید."
+        en: "Describe the meta-analysis (fixed or random effects), heterogeneity statistics (I²), publication-bias assessment and sensitivity analysis."
+
+  general:   # fallback for any other design (qualitative, case series, diagnostic accuracy, …): never fail on an unknown label
+    name: {fa: "سایر طراحی‌ها", en: "Other design"}
+    pubmed_filter: ''
+    search_topics:
+      - study design methodology
+      - sample size determination
+      - data collection instrument validation
+      - bias and confounding control
+      - statistical analysis plan
+    sample_size: [single_proportion, single_mean, two_proportions, two_means, correlation]
+    sections:
+      conduct:
+        fa: "نحوه اجرای مطالعه را متناسب با طراحی «{design_name}» شرح دهید: محیط پژوهش، مراحل اجرا، داده‌هایی که جمع‌آوری می‌شوند و زمان‌بندی آن‌ها."
+        en: "Describe how the study is conducted, appropriate to its design ({design_name}): the setting, the steps, the data collected and their timing."
+      population:
+        fa: "جامعه پژوهش، روش نمونه‌گیری و معیارهای ورود و خروج را متناسب با طراحی «{design_name}» بیان کنید."
+        en: "Describe the study population, the sampling method and the inclusion and exclusion criteria, appropriate to the design ({design_name})."
+      sample_size:
+        fa: "روش تعیین حجم نمونه متناسب با طراحی «{design_name}» و محاسبه انجام‌شده (در صورت وجود) را همراه با منبع هر پارامتر شرح دهید. اگر محاسبه‌ای داده نشده، مبنای تعیین حجم نمونه را توضیح دهید و عددی نسازید."
+        en: "Explain how the sample size is determined for this design ({design_name}) and the calculation if one is given, with the source of each parameter. If no calculation is given, explain the basis for the sample size and do not invent a number."
+      data_collection:
+        fa: "ابزار و روش گردآوری داده‌ها و روایی و پایایی آن‌ها را شرح دهید."
+        en: "Describe the data-collection tools and procedure and their validity and reliability."
+      analysis:
+        fa: "روش تجزیه و تحلیل داده‌ها متناسب با طراحی «{design_name}» را شرح دهید؛ ابتدا آمار توصیفی و سپس سایر تحلیل‌ها."
+        en: "Describe the data analysis appropriate to the design ({design_name}): descriptive statistics first, then the other analyses."
