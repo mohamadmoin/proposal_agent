@@ -298,7 +298,7 @@ def run_background(
         outputs = llm.map(lambda c: write_paragraph(c, study_title, knowledge, llm, lang), selection.selected)
         for candidate, output in zip(selection.selected, outputs, strict=True):
             if isinstance(output, Exception):
-                store.warn(f"The paragraph for PMID {candidate.record.pmid} could not be written: {output}", STEP)
+                store.warn(f"The paragraph for PMID {candidate.record.pmid} could not be written: {describe_error(output)}", STEP)
                 continue
             if output["flags"]:
                 candidate.flags.extend(output["flags"])

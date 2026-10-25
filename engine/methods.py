@@ -219,7 +219,7 @@ def topic_evidence(
     for item, result in zip(evidence, results, strict=True):
         if isinstance(result, Exception):
             item.summary, item.flags = "The summary of this topic could not be written.", ["failed"]
-            store.warn(f"Methods topic '{item.topic}': summary failed ({result}).", STEP)
+            store.warn(f"Methods topic '{item.topic}': summary failed ({describe_error(result)}).", STEP)
         elif "numbers_unverified" in item.flags:
             store.warn(f"Methods topic '{item.topic}': numbers unverified in the summary.", STEP)
     return evidence
@@ -521,7 +521,8 @@ def run_methods(
         except Exception as exc:
             size_error = str(exc)
             store.step_failed("sample_size", size_error)
-            store.warn(f"The sample size could not be computed: {size_error}", "sample_size")
+            reason = size_error if isinstance(exc, SampleSizeError) else describe_error(exc)
+            store.warn(f"The sample size could not be computed: {reason}", "sample_size")
 
     store.step_started("methods_writing", "Writing ۳-۱ … ۳-۵")
     section_ids = knowledge.section_ids()
