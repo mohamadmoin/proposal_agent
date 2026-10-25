@@ -1,13 +1,13 @@
 <section id="django" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">3 · The stack · Django</p>
-<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Django gives you a web app, an admin and a database layer in one</h2>
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">Step 2 · §4.7 · Django and the API</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1;color:#14213D">Django gives a web app, an admin and a database layer in one</h2>
 <div style="display:flex;gap:48px">
 <div style="width:640px;display:flex;flex-direction:column;gap:18px">
-<ul style="font-size:28px;line-height:1.6;color:#14213D"><li><b>Models</b>: tables as Python classes</li><li><b>Views</b>: what a URL returns</li><li><b>Admin</b>: a free back-office</li><li><b>Migrations</b>: database changes as files</li><li><b>django-ninja</b>: a JSON API from Pydantic schemas, with docs at /api/docs</li></ul>
+<ul style="font-size:28px;line-height:1.6;color:#14213D"><li><b>Models</b>: tables as Python classes</li><li><b>Views</b>: what a URL returns</li><li><b>Admin</b>: a free back-office</li><li><b>Migrations</b>: database changes as files</li><li><b>django-ninja</b>: a JSON API from Pydantic, docs at /api/docs</li></ul>
 </div>
-<p style="flex:1;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.55;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px">POST /api/v1/proposals<br>{ "title": "…", "language": "fa" }<br>→ 201 { "id": "7a49…", "status": "queued" }<br><br>GET&#160;&#160;/api/v1/proposals/7a49…<br>→ { "status": "running",<br>&#160;&#160;&#160;&#160;"steps": [ … ] }<br><br>GET&#160;&#160;/api/v1/proposals/7a49…/docx</p>
+<p style="flex:1;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.55;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px">POST /api/v1/proposals<br>{ "title": "…", "language": "fa" }<br>→ 201 { "id": "7a49…", "status": "queued" }<br><br>GET&#160;&#160;/api/v1/proposals/7a49…<br>→ { "status": "running", "steps": [ … ] }<br><br>GET&#160;&#160;/api/v1/proposals/7a49…/docx</p>
 </div>
-<p style="position:absolute;left:128px;bottom:64px;width:1300px;font-size:24px;color:#6A7280">Learn more: <a href="https://docs.djangoproject.com/en/5.2/intro/tutorial01/">The Django tutorial</a> · <a href="https://django-ninja.dev/">Django Ninja</a></p>
-<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">22</p>
-<aside>36:00–37:30. Django is what DrNext’s own backend runs on. The proposal app has two faces: web pages for people and a JSON API for other software — DrNext Academy uses exactly these three endpoints. The engine itself has no Django in it, so it stays testable and reusable.</aside>
+<p style="position:absolute;left:128px;bottom:64px;width:1550px;font-size:24px;color:#6A7280">Learn more: ▶ <a href="https://www.youtube.com/watch?v=0roB7wZMLqI">Django crash course (freeCodeCamp, 1 h)</a> · <a href="https://docs.djangoproject.com/en/5.2/intro/tutorial01/">Django tutorial</a> · <a href="https://django-ninja.dev/">Django Ninja</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">41</p>
+<aside>45:30–46:15. Django is what DrNext’s own backend runs on — which later made it easy to run this engine inside the Academy. The engine has no Django in it, so it can be hosted by any Django app.</aside>
 </section>

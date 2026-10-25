@@ -1,14 +1,14 @@
 <section id="python" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">3 · The stack · Python</p>
-<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Python is the glue that holds every step together</h2>
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">Step 2 · §4.1 · Python</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1;color:#14213D">Python is the glue — and much of the code is medicine</h2>
 <div style="display:flex;gap:48px">
 <div style="width:640px;display:flex;flex-direction:column;gap:20px">
-<p style="font-size:32px;line-height:1.45;color:#14213D">A readable, general-purpose language with libraries for almost everything: web apps, data, statistics, AI.</p>
-<p style="font-size:28px;line-height:1.45">In this app: the whole engine (search, scoring, verification, sample size, Word export) is plain Python, about 4,600 lines.</p>
+<p style="font-size:30px;line-height:1.45;color:#14213D">A readable language with libraries for web apps, data, statistics and AI.</p>
+<p style="font-size:27px;line-height:1.45">Here: the whole engine — search, scoring, verification, sample size, Word export — about 4,600 lines.</p>
 </div>
 <p style="flex:1;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.55;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px">from statistics import NormalDist<br><br>def single_proportion(p, d, alpha=0.05):<br>&#160;&#160;&#160;&#160;z = NormalDist().inv_cdf(1 - alpha / 2)<br>&#160;&#160;&#160;&#160;return z**2 * p * (1 - p) / d**2<br><br>single_proportion(0.5, 0.05)&#160;&#160;# 384.1 → 385</p>
 </div>
-<p style="position:absolute;left:128px;bottom:64px;width:1300px;font-size:24px;color:#6A7280">Learn more: <a href="https://docs.python.org/3/tutorial/">The Python tutorial</a> · <a href="https://docs.python.org/3/library/venv.html">Virtual environments</a></p>
-<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">15</p>
-<aside>25:00–26:30. Part 3: about 90 seconds per concept. The code is the real sample-size function idea from the repo (engine/samplesize.py), and you will recognise the formula from your epidemiology course: n = Z² p(1−p) / d². That is the point: much of the code in a medical product is medicine written in Python.</aside>
+<p style="position:absolute;left:128px;bottom:64px;width:1550px;font-size:24px;color:#6A7280">Learn more: ▶ <a href="https://www.youtube.com/watch?v=JP7ITIXGpHk">CS50P lecture 0 (Harvard)</a> · ▶ <a href="https://www.youtube.com/watch?v=eWRfhZUzrAc">Python for beginners (freeCodeCamp)</a> · <a href="https://docs.python.org/3/tutorial/">Python tutorial</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">37</p>
+<aside>42:30–43:15. The formula on the right is from your epidemiology course: n = Z² p(1−p) / d². Much of the code in a medical product is medicine written in Python. CS50P is the best free start.</aside>
 </section>

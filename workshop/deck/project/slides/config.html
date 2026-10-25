@@ -1,14 +1,15 @@
 <section id="config" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">3 · The stack · Configuration</p>
-<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Configuration lives in the environment, never in the code</h2>
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">Step 2 · §4.9 · configuration</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1;color:#14213D">Settings live in the environment, never in the code</h2>
 <div style="display:flex;gap:48px">
-<p style="width:760px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.6;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px"># .env — never committed<br>LLM_PROVIDER=gemini<br>LLM_API_KEY=••••••••<br>LLM_MODEL=gemini-3.1-flash-lite<br>NCBI_API_KEY=••••••••<br>API_TOKENS=••••••••<br>DATABASE_URL=mysql://…/proposal_agent</p>
+<p style="width:780px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.6;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px"># .env.example (safe defaults)<br>LLM_PROVIDER=fake&#160;&#160;&#160;&#160;&#160;# or openai, gemini<br>LLM_API_KEY=<br>LLM_MODEL=<br>LLM_MODEL_STRONG=<br>LLM_TEMPERATURE=&#160;&#160;&#160;# empty: not sent<br>NCBI_API_KEY=<br>PUBMED_OFFLINE=1&#160;&#160;&#160;# demo records<br>API_TOKENS=</p>
 <div style="flex:1;display:flex;flex-direction:column;gap:18px">
-<p style="font-size:30px;line-height:1.45;color:#14213D">Same code, different settings: your laptop (fake model, no keys), a student’s OpenAI key, DrNext’s Gemini key.</p>
-<p style="font-size:28px;line-height:1.45">Secrets in code end up on GitHub. A key on GitHub is found by bots within minutes.</p>
+<p style="font-size:29px;line-height:1.45;color:#14213D">Same code, three settings: your laptop (fake model, saved records), a student’s OpenAI key, DrNext’s Gemini key.</p>
+<p style="font-size:27px;line-height:1.45">The real .env is in .gitignore. A key pushed to GitHub is found by bots within minutes.</p>
+<p style="font-size:27px;line-height:1.45">Inside DrNext Academy: no new setting at all. The app reuses the keys the backend already has.</p>
 </div>
 </div>
-<p style="position:absolute;left:128px;bottom:64px;width:1300px;font-size:24px;color:#6A7280">Learn more: <a href="https://12factor.net/">The Twelve-Factor App</a></p>
-<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">26</p>
-<aside>42:00–43:00. The repo ships .env.example with every variable documented and safe defaults (fake mode), and .gitignore keeps the real .env out of git. During this build every real key stayed in a private file outside any repository.</aside>
+<p style="position:absolute;left:128px;bottom:64px;width:1300px;font-size:24px;color:#6A7280">Learn more: <a href="https://12factor.net/config">The Twelve-Factor App, Config</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">45</p>
+<aside>48:45–49:15. Every variable is documented in .env.example with a safe default, so the app starts with no key. Note the empty LLM_TEMPERATURE and PUBMED_OFFLINE=1 — both come back on the next slide but one as lessons. During this build every real key stayed in a private file outside any repository.</aside>
 </section>

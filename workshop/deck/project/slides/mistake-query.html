@@ -1,0 +1,22 @@
+<section id="mistake-query" data-transition="fade" style="background:#F3EFE6;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px">
+<p style="position:absolute;left:128px;top:100px;width:1664px;font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#B86E12;font-weight:600">Lab notebook · mistake 1 · found in the first live run</p>
+<h2 style="position:absolute;left:128px;top:140px;width:1664px;font-family:'Space Grotesk', Arial, sans-serif;font-size:52px;font-weight:600;line-height:1.1;color:#14213D">“Put every concept in the query” hid the most similar study</h2>
+<div style="position:absolute;left:128px;top:250px;width:812px;height:310px;background:#FFFFFF;border-top:6px solid #B86E12;border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:10px" data-build-in="rise 1">
+<div style="display:flex;gap:12px;align-items:center"><x-icon name="Lightbulb" style="color:#B86E12;width:36px;height:36px"></x-icon><h3 style="font-size:30px;color:#14213D;font-weight:600">We assumed</h3></div>
+<p style="font-size:25px;line-height:1.45">Prompt v1 asked for the concepts of the title “the condition, the population, the exposure, the outcome” and joined them with AND. The model made 4 blocks: anaemia AND (students OR women) AND prevalence AND “associated factors”.</p>
+</div>
+<div style="position:absolute;left:980px;top:250px;width:812px;height:310px;background:#FFFFFF;border-top:6px solid #1F7A7A;border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:10px" data-build-in="rise 2">
+<div style="display:flex;gap:12px;align-items:center"><x-icon name="Search" style="color:#1F7A7A;width:36px;height:36px"></x-icon><h3 style="font-size:30px;color:#14213D;font-weight:600">The run showed</h3></div>
+<p style="font-size:25px;line-height:1.45">A 2010 study of iron-deficiency anaemia in <b>female medical students in Tehran</b> — almost our exact study — was never retrieved. The background filled up with pregnant women.</p>
+</div>
+<div style="position:absolute;left:128px;top:590px;width:812px;height:310px;background:#FFFFFF;border-top:6px solid #B3261E;border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:10px" data-build-in="rise 3">
+<div style="display:flex;gap:12px;align-items:center"><x-icon name="Warning" style="color:#B3261E;width:36px;height:36px"></x-icon><h3 style="font-size:30px;color:#14213D;font-weight:600">Why it was wrong</h3></div>
+<p style="font-size:25px;line-height:1.45">AND is an intersection: each block drops every paper that words it differently. “Prevalence” and “associated factors” describe the <b>aim and design</b>, not the subject. And “OR women” widened the population to the wrong group.</p>
+</div>
+<div style="position:absolute;left:980px;top:590px;width:812px;height:310px;background:#FFFFFF;border-top:6px solid #2F6B3A;border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:10px" data-build-in="rise 4">
+<div style="display:flex;gap:12px;align-items:center"><x-icon name="Wrench" style="color:#2F6B3A;width:36px;height:36px"></x-icon><h3 style="font-size:30px;color:#14213D;font-weight:600">The fix (prompt v2)</h3></div>
+<p style="font-size:25px;line-height:1.45">Core query = condition + population, at most 3 specific blocks. Prevalence is <b>still searched</b>: in the design lane (“cross-sectional OR prevalence”) and the plain-words lane. After the fix, the Tehran study and other female-student studies came back.</p>
+</div>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">16</p>
+<aside>17:30–19:30. Reveal the four cards one by one. Important clarification: nobody decided “do not search prevalence”, and it was not in the 2024 platform’s prompts — that pipeline used 12 short free-text phrases. The mistake came from my first version of this prompt, which assumed “more concepts = more precise”. In Boolean search more AND blocks means fewer results, and aim words such as prevalence or associated factors are worded in many ways (“3.8 percent”, “correlates”, “determinants”) or are absent from the abstract. The fix keeps prevalence as a separate search lane instead of a filter on every search. Lesson: an assumption that sounds precise is a hypothesis until a real run tests it.</aside>
+</section>

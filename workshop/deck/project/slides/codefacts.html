@@ -1,17 +1,17 @@
-<section id="codefacts" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#1F7A7A;font-weight:600">2 · Expertise → pipeline</p>
-<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Facts that must be exact are owned by code, not by the model</h2>
+<section id="codefacts" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">Step 2 · §2.2 + §2.5 · concept: code owns the facts</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1;color:#14213D">The model can point at sentences, but cannot invent them</h2>
 <div style="display:flex;gap:40px">
-<div style="flex:1;display:flex;flex-direction:column;gap:16px">
-<h3 style="font-size:32px;color:#1F7A7A;font-weight:600">The model writes</h3>
-<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.5;background:#FFFFFF;border:1px solid #DDE2E7;border-radius:12px;padding:28px;color:#14213D">… was 39.8% among pregnant women. {P1}<br>… women of reproductive age {S2}{S5}</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px">
+<h3 style="font-size:30px;color:#1F7A7A;font-weight:600">Evidence by number</h3>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:23px;line-height:1.5;background:#FFFFFF;border:1px solid #DDE2E7;border-radius:12px;padding:24px;color:#14213D">abstract: {1} Background… {2} The prevalence of ID was 40.9 percent …<br>model: "evidence": [2]<br>code: sentence 2 exists ✓ numbers present ✓</p>
 </div>
-<div style="flex:1;display:flex;flex-direction:column;gap:16px">
-<h3 style="font-size:32px;color:#5D6B78;font-weight:600">Code turns it into</h3>
-<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.5;background:#FFFFFF;border:1px solid #DDE2E7;border-radius:12px;padding:28px;color:#14213D">… was 39.8% among pregnant women. [7]<br>… women of reproductive age [2, 3]</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px">
+<h3 style="font-size:30px;color:#5D6B78;font-weight:600">Citations by token</h3>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:23px;line-height:1.5;background:#FFFFFF;border:1px solid #DDE2E7;border-radius:12px;padding:24px;color:#14213D">model: … 3.8 percent. {P1}<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;… women of reproductive age {S2}{S5}<br>code: … 3.8 percent. [8]<br>&#160;&#160;&#160;&#160;&#160;&#160;… women of reproductive age [2, 3]</p>
 </div>
 </div>
-<ul style="font-size:30px;line-height:1.6;color:#14213D"><li>Citation numbers and the reference list come from PubMed metadata, never from the model</li><li>Every number in a summary must appear in its abstract, or it is replaced</li><li>The sample size is computed in Python; the writer must copy the exact number</li></ul>
-<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">11</p>
-<aside>17:30–19:00. The biggest fear about AI in research is invented references and numbers. The design answer: never let the model own them. It writes tokens; code assigns numbers in order of first appearance across the whole document and builds Vancouver references from PubMed records. Numbers are checked against the source text with a simple, testable function.</aside>
+<p style="font-size:28px;line-height:1.45;color:#14213D;width:1600px">Numbers are assigned once, in order of first appearance across the whole document; references are built from PubMed records. The biggest fear about AI in research — invented references — is designed out.</p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">21</p>
+<aside>24:00–25:00. Two tricks worth stealing for any AI tool in medicine. 1) Ask for evidence as sentence numbers, then check them in code: a model cannot fabricate a sentence it can only point at. 2) Let the model write tokens, never numbers; code numbers the references. Live testing later found one gap here too: a model wrote {S1, S2, S3} inside one pair of braces and the numbering missed it — fixed in code.</aside>
 </section>

@@ -1,90 +1,122 @@
 # From Expertise to Product — workshop outline (75 minutes)
 
 **Audience:** medical students who are curious about technology and AI. Most have never shipped software.
-**Promise of the session:** you will see every step a real product takes, from a doctor's know-how to a working,
-open-source tool, and leave with a map of what to learn next and a project you can contribute to.
-**The case:** *Proposal Agent*, an app that writes the پیشینه (literature review), aims and methods of a research
-proposal. Cheap models write it well because an expert's know-how is built into its steps.
+**Promise of the session:** you walk the real path of a real product, step by step, the way its developer did: from a
+doctor's know-how, through a repository and a build prompt, to a working open-source tool inside DrNext Academy. You
+leave with a map of what to learn next and a project you can contribute to.
+**The case:** *Proposal Agent*, an app that writes the پیشینه (literature review), aims, methods and introduction of a
+research proposal. Cheap models write it well because an expert's know-how is built into its steps.
 
-**Format:** slides, no code run in class. The "an agent builds it from the prompt" moment is a short screen recording.
-The finished agent runs live inside DrNext Academy at the end.
-**Deck style:**
-- assertion-evidence: each slide title is a full-sentence claim, and the body is the evidence (a diagram, real code, a real output);
-- one idea per slide, minimal text;
-- the same visual code throughout: teal = model step, slate = code step, amber = you decide;
-- every concept slide ends with 1–2 "learn more" links, and all links are also on the final resources slide and in `workshop/RESOURCES.md`.
+**Format:** a workshop that follows the developer's steps. No code runs in class; the "agent builds it" moment is a
+short screen recording, and the finished agent runs live inside DrNext Academy.
 
-| Time | Part | Slides | Purpose |
+**Teaching tactics used throughout:**
+- assertion-evidence slides: every title is a full-sentence claim; the body is the evidence (real code, real output);
+- one idea per slide, with the same colour code all session: teal = a model does it, slate = code does it, amber = a human decides;
+- the build prompt is the spine: a "prompt view" slide shows the whole prompt with the current section highlighted,
+  and the highlight moves (magic-move transition) as we go back and forth between the prompt and the concepts behind it;
+- "lab notebook" slides for every assumption that proved wrong in testing, in four steps revealed one by one:
+  *we assumed → the run showed → why it was wrong → the fix*;
+- every concept slide ends with a "Learn more" line, with a free video (▶) where a good one exists; slide 65 gathers
+  them into a learning path, and `RESOURCES.md` lists everything.
+
+| Time | Station | Slides | What happens |
 |---|---|---|---|
-| 0–5 | Opening | 1–3 | Hook, the case, agenda |
-| 5–12 | The product mindset | 4–7 | Problem → user → smallest useful product; your edge is domain knowledge |
-| 12–25 | Expertise → pipeline | 8–14 | How an expert writes a پیشینه and a methods section, turned into steps a cheap model can do |
-| 25–45 | The stack, one concept at a time | 15–27 | Just enough of each tool to know why it is there |
-| 45–58 | The prompt, broken down | 28–33 | The build prompt line by line: which lines are medicine, which are engineering |
-| 58–63 | Quality and responsibility | 34–36 | Evaluation, citations, authorship, licences |
-| 63–69 | GitHub and open source | 37–39 | How to run it, read it, and contribute |
-| 69–75 | DrNext Academy | 40–42 | Live demo, early announcement, Q&A |
+| 0–4 | Opening | 1–3 | A real output, and the route we will walk |
+| 4–8 | Step 0 · The idea | 4–6 | A painful task, the smallest useful product, your clinical edge |
+| 8–12:30 | Step 1 · The repository | 7–10 | Public repo + licence; the first commit is the expertise; design principles |
+| 12:30–52:15 | Step 2 · The build prompt | 11–48 | The prompt section by section, each concept behind it, and the mistakes it absorbed |
+| 52:15–55 | Step 3 · The agent builds it | 49–51 | Recording of the build, what came out |
+| 55–59:30 | Step 4 · Real runs, a clinician's eye | 52–56 | Twelve live-run findings, the pattern, measurement, authorship |
+| 59:30–65 | Step 5 · Ship | 57–60 | One engine, two hosts; the live timeline; live demo in DrNext Academy |
+| 65–75 | Your turn | 61–66 | Git and GitHub, run it, contribute, the Academy announcement, learning path, questions |
 
-## Slides
+## Slides (titles as on the deck)
 
-### Opening (0–5)
-1. **Title.** "From expertise to product: building a research-proposal agent." Presenter, date, repo QR.
-2. **A small model wrote this proposal in under two minutes, for less than 20 US cents.** Real output: a Persian پیشینه paragraph with [n] citations, plus the reference list. The question: how?
-3. **Today: one real product, every step.** Agenda as a 7-step path. That path recurs as a progress bar on later slides.
+### Opening
+1. From expertise to product
+2. A small model wrote this in under two minutes, for less than 20 US cents
+3. We follow the developer's real path, step by step
 
-### The product mindset (5–12)
-4. **Every product starts with a painful, frequent task.** Writing a proposal: finding similar studies, choosing a design, sample size, the university form. Who suffers, how often, what it costs.
-5. **The first version should be the smallest thing that is truly useful.** MVP: background + aims + methods, not a whole thesis. *Learn more:* YC Startup School; "The Mom Test" (customer interviews).
-6. **Your unfair advantage is what you know as a clinician.** Generic chatbots write generic proposals. The details an expert knows (what "similar study" means, which design answers which question) are the product.
-7. **The plan: decide by evidence, build in small verified steps.** Simple loop: idea → spec → build → measure → improve.
+### Step 0 · The idea
+4. Every product starts with a painful, frequent task
+5. Version 1 is the smallest thing that is truly useful
+6. Your unfair advantage is what you know as a clinician
 
-### Expertise → pipeline (12–25)
-8. **An expert's background section has a recipe.** Search widely → screen → keep strictly similar recent studies → summarise each the same way → cite precisely.
-9. **Each step of the recipe becomes one small job.** Pipeline diagram: phrases → PubMed → TF-IDF screen → rank by title → one paper per call → code adds citations.
-10. **Small jobs let small models do expert work.** Why it works: one job per call, short inputs, structured outputs, near-zero temperature. *Learn more:* OpenAI prompt-engineering guide; Anthropic prompt-engineering overview.
-11. **Facts that must be exact are owned by code, not by the model.** Citation numbers, references and sample-size arithmetic come from code. The model never invents a reference.
-12. **The methods section is decided by the study design.** A 12-question design questionnaire leads to one of six design labels, which picks the design-specific search topics and writing instructions (STROBE/CONSORT/PRISMA in disguise). *Learn more:* EQUATOR Network.
-13. **Aims follow a grammar.** Fixed Persian sentence frames per variable; hypotheses and questions are transformations of each aim, so they always match.
-14. **The whole flow on one page.** End-to-end diagram: title → design → literature → per-paper notes → sample size → sections → Word file.
+### Step 1 · The repository
+7. *(divider)* Start with a repository
+8. Create a public repository with a licence, then clone it
+9. The first commit holds no code: it holds the expertise (`knowledge/`)
+10. Seven principles decided before any code was written (`docs/DESIGN.md`)
 
-### The stack, one concept at a time (25–45)
-Each slide has a one-sentence definition, the role in this app, and 1–2 links. About 90 seconds each.
+### Step 2 · The build prompt (`workshop/PROMPT.md`)
+11. *(divider)* Write the build prompt
+12. A specification, not a wish: ten parts, about 400 lines *(prompt view starts)*
+13. §0 tells the agent where the medicine lives
+14. §1 defines inputs, outputs and the user — like an aim
+15. §2.1 turns a Persian title into PICO and a PubMed query
+16. **Lab notebook 1:** "Put every concept in the query" hid the most similar study — why "prevalence" left the core
+    query (it was never a rule, nor in the 2024 platform's prompts: prompt v1 AND-ed aim words as blocks), and where it
+    is still searched
+17. §2.2 encodes how an expert picks "strictly similar" studies
+18. An expert's background section follows a five-step recipe
+19. Each step of the recipe becomes one small job
+20. Small jobs let small models do expert work
+21. The model can point at sentences, but cannot invent them
+22. §2.3 makes the study design drive the whole methods chapter
+23. Twelve questions choose the design; the design chooses everything else
+24. The model chooses and justifies; Python does the arithmetic
+25. **Lab notebook 2:** A prevalence from pregnant women sized a study of students
+26. **Lab notebook 3:** A correct calculation asked a student for 10,386 women
+27. Aims follow a grammar, so hypotheses and questions always match
+28. §2.4 writes the introduction from a textbook chapter — legally
+29. Parsing reads pages as data; licences decide what you may take
+30. **Lab notebook 4–6:** Three small assumptions that quietly lowered quality (archived chapter, "percent", English in Persian)
+31. §2.5–2.6 deliver what a university actually receives
+32. §3 is search engineering: many cheap searches, one fair cut
+33. PubMed has a free, programmable door: E-utilities
+34. TF-IDF ranks text by shared rare words — fast, free, explainable
+35. We measured three search designs before choosing one
+36. §4 is the engineering: stack, layout, data, API, Docker, tests
+37. Python is the glue — and much of the code is medicine
+38. An LLM API is a paid function you call over the internet
+39. Structured outputs turn the model's answer into data
+40. A Pydantic class is a data-extraction form for one paper
+41. Django gives a web app, an admin and a database layer in one
+42. The database keeps every step, so each sentence can be traced
+43. A two-minute job runs beside the request, and streams its progress (worker vs. thread + stream; why no Celery)
+44. Docker packages the app so it runs the same everywhere
+45. Settings live in the environment, never in the code
+46. 151 tests check every step, with no internet and no keys
+47. **Lab notebook 7–10:** Four outside-world assumptions no fake could break (strong model down, free-tier limit,
+    demo default in real runs, grouped citation tokens)
+48. §5–6 tell the agent how to work, and when it is finished
 
-15. **Python is the glue.** Tutorial, virtual environments.
-16. **An LLM API is a function you call over the internet.** Request/response, tokens, temperature, cost.
-17. **Structured outputs turn text into data.** A Pydantic model as the contract; the app never parses free text.
-18. **Pydantic checks every piece of data at the border.** Types, validation, schemas.
-19. **PubMed has a free programmable door: E-utilities.** ESearch → EFetch, API key, the 3 or 10 requests/second rule, short queries.
-20. **TF-IDF is a fast, free way to rank text by overlap.** The idea in one picture, and the 0.3 threshold.
-21. **HTML parsing reads web pages as data, and licences decide what you may keep.** BeautifulSoup; StatPearls and NCBI Bookshelf terms (CC BY-NC-ND).
-22. **Django gives you a web app, an admin and a database layer in one.** Models, views, admin, migrations.
-23. **MySQL stores jobs and every intermediate result, so each sentence is traceable.** Tables for proposal, papers, notes and sections.
-24. **Long jobs run in the background.** A worker process picks queued jobs from the database (`SELECT … FOR UPDATE SKIP LOCKED`); the page polls for progress. Celery + Redis is the usual next step when a project grows.
-25. **Docker packages the app so it runs the same everywhere.** Image, container, Compose: one command starts everything.
-26. **Configuration lives in the environment, never in the code.** `.env`, secrets, 12-factor.
-27. **Tests prove each step still works.** pytest; recorded API responses, so tests need no keys.
+### Step 3 · The agent builds it
+49. *(divider)* Let the agent build it
+50. An AI coding agent built the app from the prompt in about an hour *(screen recording)*
+51. Title in; a cited draft and a Word file out
 
-### The prompt, broken down (45–58)
-28. **The build prompt is a specification, not a wish.** Its structure: goal → users → stack → steps → rules → acceptance checks.
-29. **These lines are medicine.** Highlighted excerpts: "strictly similar in aims and design", "newer is better", "5–10 papers", the 10-item per-paper checklist, the design questionnaire, the ۳-۱ … ۳-۵ form, the aims frames, "write narratively, not as bullet points".
-30. **These lines are search engineering.** 12 phrases of at most 6 words, 200 results each, TF-IDF > 0.3 on titles, dedupe by PMID, rank only titles plus dates.
-31. **These lines are software engineering.** Stack, repo layout, Pydantic schemas, Docker Compose, env vars, tests, "work in small verified steps".
-32. **An AI coding agent built it from the prompt in about an hour.** Screen recording (time-lapse): eight milestones, 143 tests, a commit after each, and a `QUESTIONS.md` of 22 decisions it wants a clinician to confirm.
-33. **What came out.** Repo tree and the running app (form → live progress → sections → Word file).
+### Step 4 · Real runs, a clinician's eye
+52. *(divider)* Run it for real, and read it like a clinician
+53. Real runs found what tests could not, five of them medical (all twelve findings)
+54. Every assumption is a hypothesis until a real run tests it
+55. You measure quality, you don't assume it
+56. The tool drafts. The researcher is the author.
 
-### Quality and responsibility (58–63)
-34. **Real runs found what tests could not, including medical judgement.** The table from `PROMPT_ANNOTATED.md` (query hid the closest studies, prevalence from the wrong population, archived chapter, 10,386-person sample) and how each became a prompt line.
-35. **You measure quality, you don't assume it.** A small evaluation set across designs, a rubric (reporting items, traceable numbers, correct sample size, valid references), and an expert read.
-36. **The tool drafts; the researcher is the author.** University rules on AI disclosure, plagiarism, checking every claim; licences of sources.
+### Step 5 · Ship
+57. *(divider)* Ship it where people already are
+58. A separate service? The product owner said no. (one engine, two hosts: the open-source app, and the same engine
+    inside the Academy's own backend — no new container, database or secret)
+59. Two minutes feel short when you can watch the agent think (the live timeline, ideas borrowed from DrNext's chat trace)
+60. The same agent, inside DrNext Academy *(live demo)*
 
-### GitHub and open source (63–69)
-37. **Git saves history; GitHub is where code lives together.** Commit, branch, pull request, issue. *Learn more:* Pro Git; GitHub Skills.
-38. **Run it in three commands.** `git clone` → copy `.env.example` → `docker compose up`.
-39. **Help make research tools better.** How to contribute (CONTRIBUTING.md, good-first-issues): new study designs, other sections, better evaluation sets, translations.
+### Your turn
+61. Git saves the history; GitHub is where people build together
+62. Run it on your laptop in three commands, no key needed
+63. Help make research tools better: clinicians are the scarce contributors
+64. The Academy will open to apps built by you *(early announcement)*
+65. Every concept from today, in a free video *(learning path)*
+66. Questions, and where to go next *(repo QR)*
 
-### DrNext Academy (69–75)
-40. **The same agent, inside DrNext Academy.** Live demo: open it from the Academy home and generate a section; then ask Fandogh, which calls it as a tool.
-41. **The Academy will be open to apps built by you.** Early announcement: a draft app standard exists; the developer programme comes after the beta. Build something useful and talk to us.
-42. **Questions, and where to go next.** Resources slide (all links), repo QR, contact.
-
-**Backup slides** (not presented): cost and latency table, data model, full pipeline with call counts, sample-size formulas.
+Speaker notes and exact timings are in each slide's `<aside>` in `deck/project/slides/`.

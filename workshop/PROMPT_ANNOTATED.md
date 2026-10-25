@@ -122,3 +122,11 @@ clinician reading the output did. Each became a line in PROMPT.md v2, so the nex
 - 82–103 seconds and about 96–145 thousand tokens per proposal.
 
 The expert's blind rating column is still empty: that is the next evaluation step.
+
+**One engine, two hosts (a correction from the product owner).** The first DrNext Academy integration called this
+app as a separate service (its own container, database, worker and token). The owner rejected it: the Academy already
+runs a Django backend with the right model keys, so a second service only adds DevOps work, a secret and a network
+hop; and because each proposal is one streamed agentic run of 1–2 minutes, a task queue (Celery) adds nothing. The
+Academy now runs a copy of `engine/` inside its own backend, in a background thread that streams each step to the
+page. The change was cheap because of one line in §4.2: *engine/ — plain Python, no Django imports*. The standalone
+service in this repository stays the right shape for anyone who runs the app on their own.

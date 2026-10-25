@@ -1,0 +1,25 @@
+<section id="p22" data-transition="magic" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px">
+<p style="position:absolute;left:128px;top:100px;width:1664px;font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#1F7A7A;font-weight:600">Step 2 · The prompt · §2.2</p>
+<h2 style="position:absolute;left:128px;top:140px;width:1664px;font-family:'Space Grotesk', Arial, sans-serif;font-size:54px;font-weight:600;line-height:1.1;color:#14213D">§2.2 encodes how an expert picks “strictly similar” studies</h2>
+<div id="pdocbg" style="position:absolute;left:128px;top:250px;width:720px;height:610px;background:#FFFFFF;border:1px solid #DDE2E7;border-radius:16px"></div>
+<div id="phl" style="position:absolute;left:136px;top:440px;width:704px;height:56px;background:#FCEBD2;border-left:6px solid #B86E12;border-radius:8px"></div>
+<div id="pdoc" style="position:absolute;left:128px;top:250px;width:720px;height:610px;padding:22px 28px;display:flex;flex-direction:column">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§0 Read first</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§1 What the app does</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§2.1 Study profile</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#14213D;font-weight:600">§2.2 Background (پیشینه)</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§2.3 Methods</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§2.4 Introduction</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§2.5–2.6 References · Word</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§3 Search engineering</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§4 Software</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§5–6 How to work · Done means</p>
+</div>
+<div style="position:absolute;left:900px;top:250px;width:892px;height:610px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;gap:12px"><p style="font-size:24px;background:#FCEBD2;color:#8A4F07;border-radius:999px;padding:6px 18px">medicine</p><p style="font-size:24px;background:#EEF1F4;color:#3F4A5A;border-radius:999px;padding:6px 18px">verified in code</p></div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:21px;line-height:1.5;background:#FFF6EA;border-left:6px solid #B86E12;border-radius:8px;padding:18px 22px;color:#14213D">aim_similarity (0–3): 0 = unrelated, 1 = same topic but a different question, 2 = similar aim, 3 = same aim and main outcome … Score = 3·aim + 1·population + 2·design_match + recency (2 within 5 years, 1 within 10) … If fewer than 5 qualify, never add papers with aim ≤ 1. Tell the user.</p>
+<ul style="font-size:25px;line-height:1.5;color:#3F4A5A"><li>The model <b>scores</b>; code <b>selects</b> with a formula a supervisor would sign</li><li>Evidence = numbered abstract sentences, checked to exist</li><li>Every number in a finding must appear in the abstract</li><li>One paragraph per paper, from that paper’s abstract only</li></ul>
+</div>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">17</p>
+<aside>19:30–20:30. Read the scoring rule aloud — this is pure research-methods knowledge: weight the aim most, then the design, prefer recent, never pad. The split matters: the model gives judgements (scores), the code applies the rule (selection), so the selection is consistent and auditable. The next four slides unpack how this works.</aside>
+</section>

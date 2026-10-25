@@ -1,0 +1,22 @@
+<section id="mistake-population" data-transition="fade" style="background:#F3EFE6;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px">
+<p style="position:absolute;left:128px;top:100px;width:1664px;font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#B86E12;font-weight:600">Lab notebook · mistake 2 · sample size</p>
+<h2 style="position:absolute;left:128px;top:140px;width:1664px;font-family:'Space Grotesk', Arial, sans-serif;font-size:52px;font-weight:600;line-height:1.1;color:#14213D">A prevalence from pregnant women sized a study of students</h2>
+<div style="position:absolute;left:128px;top:250px;width:812px;height:310px;background:#FFFFFF;border-top:6px solid #B86E12;border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:10px" data-build-in="rise 1">
+<div style="display:flex;gap:12px;align-items:center"><x-icon name="Lightbulb" style="color:#B86E12;width:36px;height:36px"></x-icon><h3 style="font-size:30px;color:#14213D;font-weight:600">We assumed</h3></div>
+<p style="font-size:25px;line-height:1.45">The most similar study — ranked by <b>aim</b> — is the best source for the numbers. The notes step took baseline numbers from the top background papers.</p>
+</div>
+<div style="position:absolute;left:980px;top:250px;width:812px;height:310px;background:#FFFFFF;border-top:6px solid #1F7A7A;border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:10px" data-build-in="rise 2">
+<div style="display:flex;gap:12px;align-items:center"><x-icon name="Search" style="color:#1F7A7A;width:36px;height:36px"></x-icon><h3 style="font-size:30px;color:#14213D;font-weight:600">The run showed</h3></div>
+<p style="font-size:25px;line-height:1.45">p = 39.8% — iron-deficiency anaemia in <b>pregnant women in Fuyang, China</b> — sized a study of female university students in Tehran: n = 369.</p>
+</div>
+<div style="position:absolute;left:128px;top:590px;width:812px;height:310px;background:#FFFFFF;border-top:6px solid #B3261E;border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:10px" data-build-in="rise 3">
+<div style="display:flex;gap:12px;align-items:center"><x-icon name="Warning" style="color:#B3261E;width:36px;height:36px"></x-icon><h3 style="font-size:30px;color:#14213D;font-weight:600">Why it was wrong</h3></div>
+<p style="font-size:25px;line-height:1.45">A sample-size parameter must come from a <b>population</b> like the study’s. Pregnancy raises iron needs; prevalence differs widely between groups. Similar aim is not similar population.</p>
+</div>
+<div style="position:absolute;left:980px;top:590px;width:812px;height:310px;background:#FFFFFF;border-top:6px solid #2F6B3A;border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:10px" data-build-in="rise 4">
+<div style="display:flex;gap:12px;align-items:center"><x-icon name="Wrench" style="color:#2F6B3A;width:36px;height:36px"></x-icon><h3 style="font-size:30px;color:#14213D;font-weight:600">The fix</h3></div>
+<p style="font-size:25px;line-height:1.45">Each number carries its paper’s population similarity. Prompt: “choose the most similar population, then the same country, then the most recent”. Code prints a note when the source population may differ, so the researcher checks it.</p>
+</div>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">25</p>
+<aside>28:30–30:00. Nothing crashed and the arithmetic was right — the output looked professional. Only a clinician reading the ۳-۳ section would notice that the prevalence came from pregnant women. This is the core message for medical students: your judgement is what turns a plausible output into a correct one. The engineering part of the fix was small: carry the population-similarity score with each number and print a note when the source population may differ.</aside>
+</section>

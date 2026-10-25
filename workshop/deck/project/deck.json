@@ -4,16 +4,16 @@
   "lists": "css",
   "title": "From Expertise to Product",
   "cover": "cover",
-  "order": ["cover", "hook", "agenda", "pain", "mvp", "edge", "loop", "recipe", "smalljobs", "cheapmodels", "codefacts", "design", "aims", "flow", "python", "llmapi", "structured", "pydantic", "eutils", "tfidf", "html", "django", "mysql", "worker", "docker", "config", "tests", "spec", "medicine", "search", "software", "agentbuild", "output", "liveruns", "measure", "author", "git", "run", "contribute", "academy", "announce", "questions"],
+  "order": ["cover", "hook", "journey", "pain", "mvp", "edge", "div-repo", "repo-create", "repo-knowledge", "repo-design", "div-prompt", "prompt-map", "p0", "p1", "p21", "mistake-query", "p22", "recipe", "smalljobs", "cheapmodels", "codefacts", "p23", "design", "samplesize", "mistake-population", "mistake-mcid", "aims", "p24", "html", "mistake-small", "p25", "p3", "eutils", "tfidf", "benchmark", "p4", "python", "llmapi", "structured", "pydantic", "django", "mysql", "worker", "docker", "config", "tests", "mistake-llm", "p5", "div-build", "agentbuild", "output", "div-test", "liveruns", "lessons", "measure", "author", "div-ship", "one-engine", "timeline", "academy", "git", "run", "contribute", "announce", "learn", "questions"],
   "sections": {
-    "s1": {"description": "Opening: a cheap model writes a real proposal section, and today we see how", "start": "cover"},
-    "s2": {"description": "The product mindset: a painful task, the smallest useful product, your clinical edge", "start": "pain"},
-    "s3": {"description": "Expertise to pipeline: an expert's recipe becomes small jobs a cheap model can do", "start": "recipe"},
-    "s4": {"description": "The stack, one concept at a time, each with links to learn more", "start": "python"},
-    "s5": {"description": "The build prompt broken down: medicine lines, search lines, software lines", "start": "spec"},
-    "s6": {"description": "Quality and responsibility: what live runs found, how we measure, who is the author", "start": "liveruns"},
-    "s7": {"description": "GitHub and open source: run it, read it, contribute", "start": "git"},
-    "s8": {"description": "DrNext Academy: the live demo and the early announcement", "start": "academy"}
+    "s1": {"description": "Opening: a real output, and the journey we will walk as a developer", "start": "cover"},
+    "s2": {"description": "The idea: a painful task, the smallest useful product, your clinical edge", "start": "pain"},
+    "s3": {"description": "Step 1: start with a repository and write the expertise down first", "start": "div-repo"},
+    "s4": {"description": "Step 2: write the build prompt, section by section, with every concept behind it", "start": "div-prompt"},
+    "s5": {"description": "Step 3: an AI coding agent builds the app from the prompt", "start": "div-build"},
+    "s6": {"description": "Step 4: test, find what was wrong, understand why, fix it", "start": "div-test"},
+    "s7": {"description": "Step 5: ship it where users are, inside DrNext Academy", "start": "div-ship"},
+    "s8": {"description": "Share: open source, contributions, the Academy announcement and a learning path", "start": "git"}
   },
   "faces": {
     "space-grotesk": {"family": "Space Grotesk", "href": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"},

@@ -1,0 +1,22 @@
+<section id="samplesize" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#B86E12;font-weight:600">Step 2 · §2.3 · concept: sample size</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1;color:#14213D">The model chooses and justifies; Python does the arithmetic</h2>
+<div style="display:flex;gap:36px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px">
+<h3 style="font-size:30px;color:#14213D;font-weight:600">A real worked calculation</h3>
+<p style="font-family:'Vazirmatn', Tahoma, sans-serif;font-size:24px;line-height:1.9;text-align:right;background:#FFFFFF;border:1px solid #DDE2E7;border-radius:12px;padding:24px;color:#14213D">فرمول (برآورد یک نسبت): n = Z² × p × (1 − p) / d²<br>مقادیر: p = 0.348 (برگرفته از [8])؛ d = 0.05 (قرارداد رایج)؛ α = 0.05<br>محاسبه: 348.64 → گرد شده به بالا: 349<br>با ریزش ۱۰٪ (فرض؛ باید تأیید شود): 388</p>
+</div>
+<div style="width:700px;display:flex;flex-direction:column;gap:14px">
+<h3 style="font-size:30px;color:#14213D;font-weight:600">Every parameter names its source</h3>
+<div style="display:flex;flex-direction:column;gap:10px">
+<p style="font-size:25px;background:#E3F1F0;border-radius:10px;padding:14px 20px;color:#14213D"><b>paper</b> — the number is checked in that abstract and cited</p>
+<p style="font-size:25px;background:#EEF1F4;border-radius:10px;padding:14px 20px;color:#14213D"><b>convention</b> — α = 0.05, power = 0.80, d = 0.05</p>
+<p style="font-size:25px;background:#FCEBD2;border-radius:10px;padding:14px 20px;color:#14213D"><b>assumption</b> — shown to the researcher to confirm</p>
+</div>
+<p style="font-size:24px;line-height:1.45">Seven formulas (one or two proportions or means, paired, correlation, case-control), each tested against textbook values.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1550px;font-size:24px;color:#6A7280">Learn more: ▶ <a href="https://www.youtube.com/watch?v=VX_M3tIyiYk">Power analysis, clearly explained (StatQuest, 17 min)</a> · ▶ <a href="https://www.youtube.com/watch?v=Ey4PqVy372U">Sample size in 6 minutes</a> · <a href="https://www.openepi.com/">OpenEpi</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">24</p>
+<aside>27:00–28:30. The old tool asked the model to “do the math and report the final number” — language models are unreliable at arithmetic. Now the model only picks the formula and the parameters, each with a source; code computes with exact normal quantiles, rounds up, and inflates for drop-out. The writer of ۳-۳ must copy the computed number, and code checks it did. This example is from a real run on the female-students anaemia title. Next: two mistakes the live runs exposed in exactly this step.</aside>
+</section>

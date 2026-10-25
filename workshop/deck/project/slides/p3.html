@@ -1,0 +1,25 @@
+<section id="p3" data-transition="magic" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px">
+<p style="position:absolute;left:128px;top:100px;width:1664px;font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#1F7A7A;font-weight:600">Step 2 · The prompt · §3</p>
+<h2 style="position:absolute;left:128px;top:140px;width:1664px;font-family:'Space Grotesk', Arial, sans-serif;font-size:54px;font-weight:600;line-height:1.1;color:#14213D">§3 is search engineering: many cheap searches, one fair cut</h2>
+<div id="pdocbg" style="position:absolute;left:128px;top:250px;width:720px;height:610px;background:#FFFFFF;border:1px solid #DDE2E7;border-radius:16px"></div>
+<div id="phl" style="position:absolute;left:136px;top:664px;width:704px;height:56px;background:#E3F1F0;border-left:6px solid #1F7A7A;border-radius:8px"></div>
+<div id="pdoc" style="position:absolute;left:128px;top:250px;width:720px;height:610px;padding:22px 28px;display:flex;flex-direction:column">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§0 Read first</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§1 What the app does</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§2.1 Study profile</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§2.2 Background (پیشینه)</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§2.3 Methods</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§2.4 Introduction</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§2.5–2.6 References · Word</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#14213D;font-weight:600">§3 Search engineering</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§4 Software</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:56px;color:#8A94A0">§5–6 How to work · Done means</p>
+</div>
+<div style="position:absolute;left:900px;top:250px;width:892px;height:610px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;gap:12px"><p style="font-size:24px;background:#E3F1F0;color:#155A60;border-radius:999px;padding:6px 18px">search</p><p style="font-size:24px;background:#EEF1F4;color:#3F4A5A;border-radius:999px;padding:6px 18px">no model calls</p></div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:21px;line-height:1.5;background:#E9F4F3;border-left:6px solid #1F7A7A;border-radius:8px;padding:18px 22px;color:#14213D">Lanes: core · core AND design filter · core AND last 10 years · plain words · core AND country — 50 each. At most 3 requests/s without a key, 9/s with one, at least 110 ms apart. TF-IDF over title + title + abstract, reciprocal-rank fusion, keep the top 40. Sentence splitting must not break on “p &lt; 0.05” or “et al.”.</p>
+<ul style="font-size:25px;line-height:1.5;color:#3F4A5A"><li>Each lane catches papers the others miss</li><li>Papers that several lanes agree on rise to the top</li><li>NCBI’s rules are followed, so the tool never gets blocked</li></ul>
+</div>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">32</p>
+<aside>36:45–37:45. This is where the first mistake was fixed: the design and prevalence words live in their own lane, the core lane holds only the subject. The next three slides explain E-utilities, TF-IDF, and how we chose this design by measuring three alternatives.</aside>
+</section>

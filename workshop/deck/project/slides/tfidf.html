@@ -1,17 +1,18 @@
-<section id="tfidf" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">3 · The stack · TF-IDF</p>
-<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">TF-IDF ranks text by shared rare words, fast and free</h2>
+<section id="tfidf" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">Step 2 · §3 · concept: TF-IDF and rank fusion</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1;color:#14213D">TF-IDF ranks text by shared rare words — fast, free, explainable</h2>
 <div style="display:flex;gap:48px">
-<div style="flex:1;display:flex;flex-direction:column;gap:20px">
-<p style="font-size:30px;line-height:1.45;color:#14213D"><b>TF</b>: how often a word appears in this abstract. <b>IDF</b>: how rare it is across all abstracts. “ferritin” counts, “study” barely does.</p>
-<p style="font-size:28px;line-height:1.45">Each abstract and the study profile become vectors; the cosine of the angle between them is the similarity.</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:29px;line-height:1.45;color:#14213D"><b>TF</b>: how often a word appears in this abstract. <b>IDF</b>: how rare it is across all abstracts. “ferritin” counts; “study” barely does.</p>
+<p style="font-size:27px;line-height:1.45">Each abstract and the study profile become vectors; the cosine of the angle between them is the similarity.</p>
+<p style="font-size:27px;line-height:1.45"><b>Rank fusion</b>: 1/(60 + rank) summed over the TF-IDF rank and every search lane that found the paper.</p>
 </div>
-<div style="flex:1;background:#FFFFFF;border:1px solid #DDE2E7;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px">
-<h3 style="font-size:32px;color:#14213D;font-weight:600">In this app</h3>
-<ul style="font-size:28px;line-height:1.6;color:#3F4A5A"><li>About 600 records → the best 40</li><li>Title counted twice, plus the abstract</li><li>Fused with the rank in each search (papers several searches agree on rise)</li><li>Costs no model call at all</li></ul>
+<div style="width:640px;background:#FFFFFF;border:1px solid #DDE2E7;border-radius:16px;padding:34px;display:flex;flex-direction:column;gap:14px">
+<h3 style="font-size:30px;color:#14213D;font-weight:600">In this app</h3>
+<ul style="font-size:27px;line-height:1.6;color:#3F4A5A"><li>2,435 hits → the best 40</li><li>Title counted twice, plus the abstract</li><li>No model call at all</li><li>The 2024 tool used titles only, with a fixed 0.3 cut-off</li></ul>
 </div>
 </div>
-<p style="position:absolute;left:128px;bottom:64px;width:1400px;font-size:24px;color:#6A7280">Learn more: <a href="https://scikit-learn.org/stable/modules/feature_extraction.html#tfidf-term-weighting">scikit-learn, TF-IDF</a> · <a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky &amp; Martin, ch. 6 (free book)</a></p>
-<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">20</p>
-<aside>33:00–34:30. TF-IDF is a 50-year-old idea and still useful: a free first filter so the expensive model reads 40 abstracts instead of 600. The old version of this tool used TF-IDF on titles only with a fixed 0.3 threshold; the new one uses titles and abstracts, keeps the top 40 and combines this with the agreement between searches (reciprocal-rank fusion).</aside>
+<p style="position:absolute;left:128px;bottom:64px;width:1550px;font-size:24px;color:#6A7280">Learn more: ▶ <a href="https://www.youtube.com/watch?v=OymqCnh-APA">TF-IDF, data science concepts (8 min)</a> · <a href="https://scikit-learn.org/stable/modules/feature_extraction.html#tfidf-term-weighting">scikit-learn TF-IDF</a> · <a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky &amp; Martin, ch. 6</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">34</p>
+<aside>39:00–40:00. A 50-year-old idea that is still the right first filter: it lets the expensive model read 40 abstracts instead of 2,435. Rank fusion is the “wisdom of crowds” of search: a paper that several different searches found is probably relevant.</aside>
 </section>

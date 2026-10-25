@@ -1,14 +1,14 @@
 <section id="structured" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#1F7A7A;font-weight:600">3 · The stack · Structured outputs</p>
-<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Structured outputs turn the model’s answer into data</h2>
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#1F7A7A;font-weight:600">Step 2 · §4.3 · structured outputs</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1;color:#14213D">Structured outputs turn the model’s answer into data</h2>
 <div style="display:flex;gap:48px">
 <div style="width:620px;display:flex;flex-direction:column;gap:20px">
-<p style="font-size:30px;line-height:1.45;color:#14213D">You give the API a schema; the answer must fit it. No regex, no “please answer in JSON”.</p>
-<p style="font-size:28px;line-height:1.45">In this app: screening returns scores and sentence numbers that code can check.</p>
+<p style="font-size:29px;line-height:1.45;color:#14213D">You give the API a schema; the answer must fit it. No regex, no “please answer in JSON”.</p>
+<p style="font-size:27px;line-height:1.45">Here: screening returns scores and sentence numbers that code can check.</p>
 </div>
-<p style="flex:1;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.55;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px">reply = client.chat.completions.parse(<br>&#160;&#160;model=MODEL, messages=messages,<br>&#160;&#160;response_format=ScreeningBatchOut)<br><br>batch = reply.choices[0].message.parsed<br>for paper in batch.papers:<br>&#160;&#160;&#160;&#160;print(paper.aim_similarity,&#160;&#160;# 0–3<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;paper.design,&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;# a label<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;paper.evidence)&#160;&#160;&#160;&#160;&#160;&#160;&#160;# [2, 5]</p>
+<p style="flex:1;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.55;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px">reply = client.chat.completions.parse(<br>&#160;&#160;model=MODEL, messages=messages,<br>&#160;&#160;response_format=ScreeningBatchOut)<br><br>batch = reply.choices[0].message.parsed<br>for paper in batch.papers:<br>&#160;&#160;&#160;&#160;print(paper.aim_similarity,&#160;&#160;# 0–3<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;paper.evidence)&#160;&#160;&#160;&#160;&#160;&#160;&#160;# [2, 5]</p>
 </div>
-<p style="position:absolute;left:128px;bottom:64px;width:1300px;font-size:24px;color:#6A7280">Learn more: <a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI, Structured Outputs</a></p>
-<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">17</p>
-<aside>28:00–29:30. Before structured outputs, people asked the model to “reply in JSON” and parsed it with fragile code; the archived first version of this tool did exactly that. Now the schema is enforced. A trick worth remembering: the model answers with sentence NUMBERS as evidence, so code can check the quote exists. A model cannot invent a sentence it can only point at.</aside>
+<p style="position:absolute;left:128px;bottom:64px;width:1550px;font-size:24px;color:#6A7280">Learn more: <a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI, Structured Outputs</a> · ▶ <a href="https://www.youtube.com/watch?v=ysPbXH0LpIE">Prompting 101 (Anthropic)</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">39</p>
+<aside>44:00–44:45. The archived first version of the 2024 tool asked for JSON inside the prompt and parsed it with regular expressions. Structured outputs enforce the schema at the API level.</aside>
 </section>

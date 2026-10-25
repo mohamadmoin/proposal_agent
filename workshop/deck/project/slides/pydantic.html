@@ -1,14 +1,14 @@
 <section id="pydantic" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">3 · The stack · Pydantic</p>
-<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Pydantic checks every piece of data at the border</h2>
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">Step 2 · §4.3 · Pydantic</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1;color:#14213D">A Pydantic class is a data-extraction form for one paper</h2>
 <div style="display:flex;gap:48px">
 <div style="width:620px;display:flex;flex-direction:column;gap:20px">
-<p style="font-size:30px;line-height:1.45;color:#14213D">A Python class describes the shape of the data. Pydantic validates it and turns it into a JSON schema.</p>
-<p style="font-size:28px;line-height:1.45">In this app: Pydantic classes describe every model answer and every API input, so bad data stops at the door.</p>
+<p style="font-size:29px;line-height:1.45;color:#14213D">A Python class describes the shape of the data; Pydantic validates it and turns it into a JSON schema.</p>
+<p style="font-size:27px;line-height:1.45">Here: every model answer and every API input, so bad data stops at the door.</p>
 </div>
-<p style="flex:1;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.55;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px">class ScreeningItemOut(BaseModel):<br>&#160;&#160;&#160;&#160;pmid: str<br>&#160;&#160;&#160;&#160;aim_similarity: int&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;# 0–3<br>&#160;&#160;&#160;&#160;population_similarity: int # 0–3<br>&#160;&#160;&#160;&#160;design: str<br>&#160;&#160;&#160;&#160;design_match: bool<br>&#160;&#160;&#160;&#160;sample_size: int | None<br>&#160;&#160;&#160;&#160;country: str | None<br>&#160;&#160;&#160;&#160;main_finding: str<br>&#160;&#160;&#160;&#160;evidence: list[int]</p>
+<p style="flex:1;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.55;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px">class ScreeningItemOut(BaseModel):<br>&#160;&#160;&#160;&#160;pmid: str<br>&#160;&#160;&#160;&#160;aim_similarity: int&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;# 0–3<br>&#160;&#160;&#160;&#160;population_similarity: int # 0–3<br>&#160;&#160;&#160;&#160;design: str<br>&#160;&#160;&#160;&#160;design_match: bool<br>&#160;&#160;&#160;&#160;sample_size: int | None<br>&#160;&#160;&#160;&#160;main_finding: str<br>&#160;&#160;&#160;&#160;evidence: list[int]</p>
 </div>
-<p style="position:absolute;left:128px;bottom:64px;width:1300px;font-size:24px;color:#6A7280">Learn more: <a href="https://pydantic.dev/docs/validation/latest/get-started/">Pydantic documentation</a></p>
-<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">18</p>
-<aside>29:30–31:00. Read the class as a clinician: it is a data-extraction form for one paper, the same thing you would design for a systematic review. Pydantic rejects an answer with a missing field or a wrong type (a word where a number belongs) before it reaches the selection step; engine/schemas.py in the repo holds every such form.</aside>
+<p style="position:absolute;left:128px;bottom:64px;width:1550px;font-size:24px;color:#6A7280">Learn more: ▶ <a href="https://www.youtube.com/watch?v=XIdQ6gO3Anc">Pydantic tutorial (11 min)</a> · <a href="https://pydantic.dev/docs/validation/latest/get-started/">Pydantic documentation</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">40</p>
+<aside>44:45–45:30. Read the class as a clinician: it is the extraction form you would design for a systematic review. Pydantic rejects an answer with a missing field or a wrong type before it reaches the selection step.</aside>
 </section>
