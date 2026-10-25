@@ -1,0 +1,41 @@
+name: New study design
+description: Propose a study-design template for knowledge/designs.yaml.
+labels: ["knowledge", "study design"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Design name (English and Persian)
+      placeholder: "Diagnostic accuracy study / مطالعه تشخیصی"
+    validations:
+      required: true
+  - type: input
+    id: guideline
+    attributes:
+      label: Reporting guideline
+      placeholder: "STARD 2015"
+    validations:
+      required: true
+  - type: textarea
+    id: filter
+    attributes:
+      label: PubMed filter that finds studies of this design
+      render: text
+  - type: textarea
+    id: topics
+    attributes:
+      label: Five methodological search topics
+  - type: textarea
+    id: sample_size
+    attributes:
+      label: Sample-size formulas
+      description: Existing ids from knowledge/sample_size.md, or a new formula with a reference and reference values.
+  - type: textarea
+    id: sections
+    attributes:
+      label: Instructions for 3.1–3.5 (Persian and English)
+      description: How each methods sub-section should be written for this design.
+  - type: textarea
+    id: example
+    attributes:
+      label: An example title for evals/titles.yaml

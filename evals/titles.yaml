@@ -1,0 +1,40 @@
+# The evaluation set: one title per supported design, in Persian and English.
+# `manage.py eval_run` runs each one live and writes a report with the automatic checks (docs/EVALUATION.md).
+# The design is NOT given to the app by default, so the design router is tested too; `design` is the expected label.
+
+titles:
+  - id: cross_sectional
+    design: cross_sectional
+    fa: "شیوع کمبود ویتامین D در زنان باردار مراجعه‌کننده به مراکز بهداشتی تهران"
+    en: "Prevalence of vitamin D deficiency among pregnant women attending health centres in Tehran"
+    purpose: "To estimate how common vitamin D deficiency is in pregnancy, to plan screening."
+
+  - id: case_control
+    design: case_control
+    fa: "عوامل خطر دیابت بارداری در زنان مراجعه‌کننده به بیمارستان‌های شیراز: یک مطالعه مورد-شاهدی"
+    en: "Risk factors for gestational diabetes mellitus in women attending hospitals in Shiraz: a case-control study"
+    purpose: "To compare past exposures of women with and without gestational diabetes."
+
+  - id: cohort
+    design: cohort
+    fa: "بروز افسردگی پس از زایمان و ارتباط آن با نوع زایمان در یک کوهورت از زنان مشهد"
+    en: "Incidence of postpartum depression and its association with mode of delivery in a cohort of women in Mashhad"
+    purpose: "To follow women after delivery and compare the risk of depression after caesarean and vaginal birth."
+
+  - id: randomized_controlled_trial
+    design: randomized_controlled_trial
+    fa: "تأثیر مکمل ویتامین D بر کنترل قند خون در بزرگسالان مبتلا به دیابت نوع ۲: کارآزمایی بالینی تصادفی‌شده"
+    en: "Effect of vitamin D supplementation on glycaemic control in adults with type 2 diabetes: a randomised controlled trial"
+    purpose: "To test whether vitamin D lowers HbA1c compared with placebo over 12 weeks."
+
+  - id: quasi_experimental
+    design: quasi_experimental
+    fa: "تأثیر یک مداخله آموزشی بر رعایت بهداشت دست در پرستاران بخش‌های مراقبت ویژه"
+    en: "Effect of an educational intervention on hand hygiene compliance among nurses in intensive care units"
+    purpose: "To compare hand hygiene compliance before and after a training programme, without randomisation."
+
+  - id: systematic_review_or_meta_analysis
+    design: systematic_review_or_meta_analysis
+    fa: "شیوع عفونت هلیکوباکتر پیلوری در ایران: مرور نظام‌مند و فراتحلیل"
+    en: "Prevalence of Helicobacter pylori infection in Iran: a systematic review and meta-analysis"
+    purpose: "To pool published prevalence estimates of H. pylori infection in Iran."

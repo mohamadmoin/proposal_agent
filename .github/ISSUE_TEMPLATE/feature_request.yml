@@ -1,0 +1,22 @@
+name: Feature request
+description: Suggest an improvement.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: Who needs this and why? Real examples help most.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: What should the app do? Is it code, a prompt (engine/prompts) or domain knowledge (knowledge/)?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered

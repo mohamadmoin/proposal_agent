@@ -106,3 +106,20 @@ With `gpt-5.4-mini` or `gemini-3.1-flash-lite` this costs a few US cents and tak
 - automatic checks: every citation resolves, evidence sentences are verbatim, the ۳-۳ number equals the computed
   one, and aims, hypotheses and questions match one to one;
 - a methodologist reads a sample blind, with a rubric.
+
+## Implementation notes and deviations (v0.1)
+
+Recorded while building v0.1; each says why. Open questions for the clinician are in `QUESTIONS.md`.
+
+| # | Decision | Why |
+|---|---|---|
+| D9 | **WhiteNoise** serves the CSS/JS from gunicorn (one extra runtime dependency). | Without it, `DJANGO_DEBUG=0` (the safe default) would need a separate web server for static files; students run `docker compose up` only. |
+| D10 | A few engine modules beyond the planned layout: `profile.py` (step 1), `titles.py` (section titles not in designs.yaml), `store.py` (the `Store` interface + `MemoryStore`), `fake_llm.py` (the fake provider) and `checks.py` (the evaluation checks). | Each is one small job; keeping them out of `pipeline.py` keeps that file a readable table of contents. `engine.Store` is re-exported from `engine/__init__.py`. |
+| D11 | The fake provider reads the same prompts a real model gets (XML-like tags such as `<papers>`, `<study_profile>`) and answers with rules, copying sentences and numbers verbatim. | Tests and the keyless demo exercise the real prompts, parsing and verification code paths, not a parallel test-only path. |
+| D12 | Writes to the database happen only on the thread running the pipeline; model-call records from the parallel threads are queued and flushed by that thread (`proposals/store.py`). | No extra database connections per thread, no write races, and it works the same on MySQL and SQLite. |
+| D13 | The background paragraph's number check accepts numbers that appear in the paper's **title** as well as its abstract (besides the year and the sample size). | The recipe requires the English title, and titles often contain numbers (e.g. "type 2 diabetes", "COVID-19"); flagging those would be false alarms. |
+| D14 | Methods topic summaries are written in English and kept as internal notes; in the stored trace their `{M#}` tokens are shown as PMIDs. Only the document text (introduction, aims, background, ۳-۱ … ۳-۵ and the worked calculation) is numbered. | Numbering notes that never appear in the document would add references that are not cited. |
+| D15 | If the sample size cannot be computed (missing parameter, formula not allowed for the design), ۳-۳ is written without a number, the user gets a warning, and the methods section still completes. | Failing the whole chapter for one parameter is worse for the student than an honest gap; inventing a number is never acceptable. |
+| D16 | A methods sub-section that fails leaves the chapter "done" with an `incomplete` flag, and the job ends `done_with_errors`. | Four good sub-sections are useful; the user is told exactly which one is missing. |
+| D17 | Compose sets `name: proposal_agent`, a configurable `WEB_PORT`, `init: true` (so SIGTERM reaches the worker) and a 5-minute stop grace period for the worker; MySQL's port is not published. | Safe defaults on machines that already run other projects; graceful worker shutdown. |
+| D18 | Persian `.docx` output declares "B Nazanin" as the complex-script font and records "Vazirmatn" as its alternative (`w:altName`) in the font table, and sets right-to-left on every paragraph, run and the section. | Word has no per-run font fallback list; the font table is the OOXML place for an alternative font. |

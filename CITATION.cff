@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use Proposal Agent, please cite it as below."
+title: "Proposal Agent: drafting research-proposal sections from PubMed evidence"
+type: software
+authors:
+  - name: "The Proposal Agent contributors"
+version: 0.1.0
+date-released: 2026-10-25
+license: MIT
+abstract: >-
+  An open-source web app that drafts the introduction, aims, background and methods of a medical research proposal
+  from a study title, with citations to real PubMed records, verified evidence sentences, a sample size computed by
+  code and a Word export with right-to-left Persian support.
+keywords:
+  - research proposal
+  - medical education
+  - PubMed
+  - large language models
+  - evidence synthesis
+  - Persian

@@ -130,7 +130,10 @@ API_TOKENS = env_list("API_TOKENS", "")
 def normalise_frame_ancestors(raw: str) -> str:
     """Put the quotes back on CSP keywords: env-file parsers often strip them ('self' → self)."""
     keywords = {"self", "none"}
-    parts = [f"'{p}'" if p.strip("'") in keywords else p for p in raw.split()]
+    parts = []
+    for part in raw.split():
+        bare = part.strip("'")
+        parts.append(f"'{bare}'" if bare in keywords else part)
     return " ".join(parts) or "'self'"
 
 
