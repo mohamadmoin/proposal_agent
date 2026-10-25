@@ -1,0 +1,14 @@
+<section id="tests" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">3 · The stack · Tests</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">150 tests prove each step still works, with no internet and no keys</h2>
+<div style="display:flex;gap:48px">
+<p style="width:820px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.6;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px">def test_two_proportions_reference_value():<br>&#160;&#160;&#160;&#160;r = compute("two_proportions",<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{"p1": 0.6, "p2": 0.4}, rate=None)<br>&#160;&#160;&#160;&#160;assert r.n1 == 97&#160;&#160;# per group<br><br>$ pytest<br>150 passed in 3.6s</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:28px;line-height:1.45;color:#14213D">Saved PubMed records and a fake model replace the network, so anyone can run them, and GitHub runs them on every change.</p>
+<p style="font-size:28px;line-height:1.45">The reference values come from the expert’s file: knowledge/sample_size.md.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1300px;font-size:24px;color:#6A7280">Learn more: <a href="https://docs.pytest.org/en/stable/getting-started.html">pytest, Get started</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">27</p>
+<aside>43:00–45:00. A test is a small program that checks another program. The sample-size tests check textbook values written by the clinician. The snippet shows the idea; the real tests are in tests/test_samplesize.py. Tests are what make it safe to change things later — and what let an AI agent work for an hour without breaking earlier steps.</aside>
+</section>

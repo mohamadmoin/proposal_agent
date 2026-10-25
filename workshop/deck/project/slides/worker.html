@@ -1,0 +1,16 @@
+<section id="worker" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">3 · The stack · Background jobs</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Long jobs run in the background while the page shows progress</h2>
+<div style="display:flex;align-items:center;gap:20px">
+<div style="flex:1;background:#FFFFFF;border:2px solid #B86E12;border-radius:16px;padding:30px"><h3 style="font-size:30px;color:#14213D;font-weight:600">Web page</h3><p style="font-size:26px;line-height:1.4">saves the job as “queued”, answers in 0.1 s</p></div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#9AA5B1"></x-shape>
+<div style="flex:1;background:#EEF1F4;border:2px solid #5D6B78;border-radius:16px;padding:30px"><h3 style="font-size:30px;color:#14213D;font-weight:600">Database</h3><p style="font-size:26px;line-height:1.4">the queue is just a table</p></div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#9AA5B1"></x-shape>
+<div style="flex:1;background:#E3F1F0;border:2px solid #1F7A7A;border-radius:16px;padding:30px"><h3 style="font-size:30px;color:#14213D;font-weight:600">Worker</h3><p style="font-size:26px;line-height:1.4">claims one job, runs the pipeline, writes each step</p></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.5;background:#14213D;color:#E8EEF4;border-radius:14px;padding:28px">Proposal.objects.select_for_update(skip_locked=True)<br>&#160;&#160;&#160;&#160;.filter(status=Proposal.Status.QUEUED).order_by("created_at").first()</p>
+<p style="font-size:28px;line-height:1.45;color:#14213D">Two workers never take the same job. When a project grows, Celery with Redis is the usual next step.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1300px;font-size:24px;color:#6A7280">Learn more: <a href="https://docs.celeryq.dev/en/stable/getting-started/first-steps-with-celery.html">Celery, first steps</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">24</p>
+<aside>39:00–40:30. Why not just run the pipeline inside the web request? It takes 1–2 minutes; browsers and servers give up long before. A queue plus a worker is the standard pattern. We chose the simplest real version (a table and SKIP LOCKED) over Celery to keep the number of moving parts small for a teaching project; the design document records that choice and its trade-off.</aside>
+</section>

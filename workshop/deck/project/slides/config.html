@@ -1,0 +1,14 @@
+<section id="config" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">3 · The stack · Configuration</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Configuration lives in the environment, never in the code</h2>
+<div style="display:flex;gap:48px">
+<p style="width:760px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.6;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px"># .env — never committed<br>LLM_PROVIDER=gemini<br>LLM_API_KEY=••••••••<br>LLM_MODEL=gemini-3.1-flash-lite<br>NCBI_API_KEY=••••••••<br>API_TOKENS=••••••••<br>DATABASE_URL=mysql://…/proposal_agent</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:30px;line-height:1.45;color:#14213D">Same code, different settings: your laptop (fake model, no keys), a student’s OpenAI key, DrNext’s Gemini key.</p>
+<p style="font-size:28px;line-height:1.45">Secrets in code end up on GitHub. A key on GitHub is found by bots within minutes.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1300px;font-size:24px;color:#6A7280">Learn more: <a href="https://12factor.net/">The Twelve-Factor App</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">26</p>
+<aside>42:00–43:00. The repo ships .env.example with every variable documented and safe defaults (fake mode), and .gitignore keeps the real .env out of git. During this build every real key stayed in a private file outside any repository.</aside>
+</section>

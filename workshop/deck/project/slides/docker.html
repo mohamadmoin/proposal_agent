@@ -1,0 +1,14 @@
+<section id="docker" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">3 · The stack · Docker</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Docker packages the app so it runs the same everywhere</h2>
+<div style="display:flex;gap:48px">
+<div style="width:620px;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:28px;line-height:1.45;color:#14213D"><b>Image</b>: the app and everything it needs, frozen. <b>Container</b>: a running copy. <b>Compose</b>: several containers started together.</p>
+<p style="font-size:28px;line-height:1.45">Here: one image, three services. No Python or MySQL to install on your laptop.</p>
+</div>
+<p style="flex:1;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.55;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px">services:<br>&#160;&#160;db:&#160;&#160;&#160;&#160;&#160;# MySQL 8.4, data in a volume<br>&#160;&#160;web:&#160;&#160;&#160;&#160;# migrate, then gunicorn :8000<br>&#160;&#160;worker: # manage.py run_worker<br><br>$ docker compose up --build</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1300px;font-size:24px;color:#6A7280">Learn more: <a href="https://docs.docker.com/get-started/">Docker, Get started</a> · <a href="https://docs.docker.com/compose/">Docker Compose</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">25</p>
+<aside>40:30–42:00. “It works on my machine” is the oldest problem in software. Docker solves it by shipping the machine. The same images run on a student’s laptop, in GitHub’s test servers and next to DrNext Academy on staging. The web container runs the database migrations on start, then serves the app; the worker runs the jobs.</aside>
+</section>

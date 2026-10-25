@@ -1,0 +1,14 @@
+<section id="eutils" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#5D6B78;font-weight:600">3 · The stack · PubMed E-utilities</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">PubMed has a free, programmable door: E-utilities</h2>
+<div style="display:flex;gap:48px">
+<div style="width:640px;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:28px;line-height:1.45;color:#14213D"><b>esearch</b> returns PMIDs for a query; <b>efetch</b> returns the records (title, abstract, authors, journal, MeSH).</p>
+<p style="font-size:28px;line-height:1.45">Rules: send “tool” and your email; 3 requests/s, or 10 with a free API key. Space the requests out, or you get HTTP 429.</p>
+</div>
+<p style="flex:1;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:23px;line-height:1.55;background:#14213D;color:#E8EEF4;border-radius:14px;padding:32px">GET eutils.ncbi.nlm.nih.gov/entrez/eutils/<br>&#160;&#160;esearch.fcgi?db=pubmed&amp;retmax=50<br>&#160;&#160;&amp;term=("Anemia, Iron-Deficiency"[mh]<br>&#160;&#160;&#160;&#160;OR "iron deficiency anemia"[tiab])<br>&#160;&#160;&#160;&#160;AND ("Students"[mh] OR student*[tiab])<br><br>→ {"count": "397", "idlist": ["36554486", …]}</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1400px;font-size:24px;color:#6A7280">Learn more: <a href="https://www.ncbi.nlm.nih.gov/books/NBK25497/">E-utilities introduction</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/help/">PubMed User Guide</a> · <a href="https://support.nlm.nih.gov/knowledgebase/article/KA-05317/en-us">API keys</a></p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">19</p>
+<aside>31:00–33:00. [mh] is a MeSH heading, [tiab] title/abstract. You already know these from PubMed’s Advanced search; the API is the same search, called by code. Spacing matters: DrNext measured 28 of 96 requests rejected when 10 were sent at once, and zero when they were spaced 100 ms apart. Short plain-word searches beside the MeSH query also helped recall in that benchmark.</aside>
+</section>

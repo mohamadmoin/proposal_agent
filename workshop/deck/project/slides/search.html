@@ -1,0 +1,13 @@
+<section id="search" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#1F7A7A;font-weight:600">4 · The build prompt · search engineering</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">These lines are search engineering: find the right papers cheaply</h2>
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:25px;line-height:1.5;background:#E9F4F3;border-left:6px solid #1F7A7A;border-radius:8px;padding:20px 28px;color:#14213D">core_query: the study’s subject only — the condition and the population, at most 3 blocks … never prevalence, associated factors or design words</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:25px;line-height:1.5;background:#E9F4F3;border-left:6px solid #1F7A7A;border-radius:8px;padding:20px 28px;color:#14213D">Lanes: core · core AND design filter · core AND last 10 years · plain words · core AND country — 50 results each</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:25px;line-height:1.5;background:#E9F4F3;border-left:6px solid #1F7A7A;border-radius:8px;padding:20px 28px;color:#14213D">TF-IDF over title + title + abstract … reciprocal-rank fusion … keep the top 40</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:25px;line-height:1.5;background:#E9F4F3;border-left:6px solid #1F7A7A;border-radius:8px;padding:20px 28px;color:#14213D">At most 3 requests/s without a key and 9/s with one, at least 110 ms apart</p>
+</div>
+<p style="font-size:28px;line-height:1.45;color:#14213D">The first line was added after a live run: aim words in the query hid the most similar studies.</p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">30</p>
+<aside>49:00–51:00. This is where medicine and engineering meet: you need to know MeSH and how PubMed indexes to write these lines, and you need to know rate limits and ranking to make them work. The first line is the story of slide 34: our first query for “female medical students” also required “prevalence” and “associated factors”, and missed the 2010 Tehran study that matched almost exactly.</aside>
+</section>

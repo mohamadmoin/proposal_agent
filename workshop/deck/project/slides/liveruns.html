@@ -1,0 +1,18 @@
+<section id="liveruns" data-transition="fade" style="background:#F7F6F2;color:#3F4A5A;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#B86E12;font-weight:600">5 · Quality and responsibility</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1;color:#14213D">Real runs found what tests could not, including medical judgement</h2>
+<table style="font-size:24px;color:#14213D">
+<tr><th style="width:62%">Found in a live run</th><th style="width:12%">Kind</th><th style="width:26%">Fix</th></tr>
+<tr><td>Query also required “prevalence” and “associated factors”: the 2010 Tehran study was never found</td><td>medical</td><td>query = condition + population only</td></tr>
+<tr><td>Sample size used a prevalence measured in pregnant women, for a study of students</td><td>medical</td><td>closest population wins, else flagged</td></tr>
+<tr><td>An “(Archived)” StatPearls chapter was chosen</td><td>medical</td><td>current chapters first</td></tr>
+<tr><td>A 2-point difference gave a sample of 10,386</td><td>medical</td><td>ask for the smallest important difference</td></tr>
+<tr><td>“3.8 percent” not recognised as 3.8%</td><td>software</td><td>percent words count</td></tr>
+<tr><td>Strong model down; a run stalled for 9 minutes</td><td>software</td><td>small model takes over, warns</td></tr>
+<tr><td>Free-tier key: 15 requests per minute</td><td>software</td><td>wait as the provider asks</td></tr>
+<tr><td>Demo setting fed saved test records to real runs, silently</td><td>software</td><td>a visible warning</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1400px;font-size:24px;color:#6A7280">Full list (12 items): workshop/PROMPT_ANNOTATED.md · each fix became a line in the prompt</p>
+<p style="position:absolute;right:128px;bottom:64px;width:160px;text-align:right;font-size:24px;color:#6A7280">34</p>
+<aside>58:00–60:00. The most important slide for clinicians. Fakes test the plumbing; only real runs and a clinician reading the output test the judgement. None of the medical problems raised an error: the output looked fine to a non-expert. Each one became a line in the build prompt (version 2), so the next build starts with it. The full table in PROMPT_ANNOTATED.md also lists grouped citation tokens, raw error dumps in warnings, a deployment hostname and English fragments in Persian prose.</aside>
+</section>
