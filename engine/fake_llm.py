@@ -358,7 +358,7 @@ class FakeBackend:
 
     def step_background_paragraph(self, user: str) -> str:
         attrs, body = (blocks(user, "paper") or [({}, "")])[0]
-        token = "{" + attrs.get("token", "P0") + "}"
+        token = "{" + attrs.get("token", "P0").strip("{}") + "}"
         record = json_tag(user, "screening")
         title, author, year = field(body, "Title"), field(body, "First author"), field(body, "Year")
         finding = record.get("main_finding", "")

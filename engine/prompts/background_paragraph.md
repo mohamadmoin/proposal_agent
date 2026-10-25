@@ -7,7 +7,7 @@ Write one paragraph of the background (پیشینه) about the single study belo
 {{background_checklist}}
 </background_rules>
 
-<paper token="{{token}}">
+<paper token="{{token_id}}">
 Title: {{paper_title}}
 First author: {{first_author}}
 Year: {{year}}
