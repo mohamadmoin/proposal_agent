@@ -75,7 +75,7 @@ From the title, the purpose and the design hint, return:
 3. **Verify** in code, never trusting the model:
    - The evidence sentence numbers must exist. If they do not, cap `aim_similarity` at 1.
    - Every number in `main_finding` must appear in the abstract. Normalise first: Persian and Arabic-Indic digits to
-     ASCII, "·" to ".", ".5" to "0.5", and percentages both ways. If a number is missing, replace `main_finding` with
+     ASCII, "·" to ".", ".5" to "0.5", and percentages both ways ("45%", "45 percent", "45 per cent", «۴۵ درصد»). If a number is missing, replace `main_finding` with
      the evidence sentences and keep the model text for audit.
 4. **Select** in code:
    - Eligible: `aim_similarity ≥ 2` AND (`design_match` OR `population_similarity ≥ 2`).
@@ -315,7 +315,8 @@ Everything comes from the environment. Commit an `.env.example` that documents e
 - model: the `LLM_*` variables;
 - PubMed: the `NCBI_*` variables;
 - app: `API_TOKENS`, `FRAME_ANCESTORS`, `WEB_ACCESS_CODE`, `BACKGROUND_MAX_PAPERS`, `BACKGROUND_SCREEN_TOP`;
-- offline demo: `PUBMED_OFFLINE=1` serves PubMed from the test fixtures.
+- offline demo: `PUBMED_OFFLINE=1` serves PubMed from the test fixtures. When a real model runs with it, warn the
+  user: saved test records would otherwise give poor results silently.
 
 ### 4.10 Docker
 - A multi-stage `Dockerfile` (build wheels, then a slim runtime): non-root user, `collectstatic` at build time,

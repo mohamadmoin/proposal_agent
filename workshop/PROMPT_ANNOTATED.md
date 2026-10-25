@@ -94,8 +94,8 @@ PROMPT.md v1). In about an hour it built all eight milestones, each with tests a
 It wrote 22 decisions it had to take alone into `QUESTIONS.md`. That file is the agent's way of saying "a
 clinician should confirm this".
 
-**What only real runs could show.** Fakes test the plumbing, not the judgement. Real proposals on OpenAI and Gemini
-found nine problems:
+**What only real runs could show.** Fakes test the plumbing, not the judgement. Real proposals on OpenAI and Gemini,
+and the Academy end-to-end test, found twelve problems:
 
 | Found in a live run | Kind | Fix (code or prompt line) |
 |---|---|---|
@@ -108,9 +108,12 @@ found nine problems:
 | The model wrote `{S1, S2, S3}` in one pair of braces, so the citation stayed in the text | 🛠 | The numbering accepts grouped tokens |
 | A raw JSON error dump appeared in the user's warnings | 🛠 | Short reasons for users; full errors in the trace |
 | Another service could not reach the API (host not allowed) | 🛠 | Deployment note: allow the internal hostname |
+| A prevalence written "3.8 percent" was not recognised as 3.8%, so a correct source became an assumption | 🛠 | Percent words count ("percent", "per cent", «درصد») |
+| The demo setting `PUBMED_OFFLINE=1` silently fed saved test records to real runs | 🛠 | A visible warning when a real model runs on offline PubMed |
+| English half-sentences inside Persian paragraphs ("percent", "greater than or equal to") | 🩺 | Style rule: translate everything except titles, abbreviations and units |
 
-Four of the nine are medical judgement. No test written before the runs would have caught them; a clinician reading
-the output did. Each became a line in PROMPT.md v2, so the next build starts with it.
+Five of the twelve are medical or language judgement. No test written before the runs would have caught them; a
+clinician reading the output did. Each became a line in PROMPT.md v2, so the next build starts with it.
 
 **Measured after the fixes (OpenAI `gpt-5.4-mini`, six Persian titles, one per design, design chosen by the app):**
 - the design router picked the right design 6 of 6 times;

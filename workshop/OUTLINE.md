@@ -73,7 +73,7 @@ Each slide has a one-sentence definition, the role in this app, and 1–2 links.
 33. **What came out.** Repo tree and the running app (form → live progress → sections → Word file).
 
 ### Quality and responsibility (58–63)
-34. **Real runs found what tests could not: four of nine problems were medical judgement.** The table from `PROMPT_ANNOTATED.md` (query hid the closest studies, prevalence from the wrong population, archived chapter, 10,386-person sample) and how each became a prompt line.
+34. **Real runs found what tests could not, including medical judgement.** The table from `PROMPT_ANNOTATED.md` (query hid the closest studies, prevalence from the wrong population, archived chapter, 10,386-person sample) and how each became a prompt line.
 35. **You measure quality, you don't assume it.** A small evaluation set across designs, a rubric (reporting items, traceable numbers, correct sample size, valid references), and an expert read.
 36. **The tool drafts; the researcher is the author.** University rules on AI disclosure, plagiarism, checking every claim; licences of sources.
 
