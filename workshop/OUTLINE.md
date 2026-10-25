@@ -29,7 +29,7 @@ The finished agent runs live inside DrNext Academy at the end.
 
 ### Opening (0–5)
 1. **Title.** "From expertise to product: building a research-proposal agent." Presenter, date, repo QR.
-2. **A cheap model wrote this proposal section in two minutes, for a few cents.** Real output: a Persian پیشینه paragraph with [n] citations, plus the reference list. The question: how?
+2. **A small model wrote this proposal in under two minutes, for less than 20 US cents.** Real output: a Persian پیشینه paragraph with [n] citations, plus the reference list. The question: how?
 3. **Today: one real product, every step.** Agenda as a 7-step path. That path recurs as a progress bar on later slides.
 
 ### The product mindset (5–12)

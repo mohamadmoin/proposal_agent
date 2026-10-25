@@ -82,7 +82,7 @@ browser ──► Django (web pages + JSON API, django-ninja) ──► MySQL
 | Introduction parts 1–2 (StatPearls) and parts 3–4 (background) | 2 | strong, small |
 | **Total** | **≈ 30–37** | ≈ 90% small |
 
-With `gpt-5.4-mini` or `gemini-3.1-flash-lite` this costs a few US cents and takes about 1–3 minutes.
+Measured on 2026-10-25 with `gpt-5.4-mini` ($0.75 / $4.50 per million input / output tokens): about 95–145 thousand tokens, **US$0.13–0.19 per full proposal**, 82–103 seconds.
 
 ## Data model
 
