@@ -6,7 +6,7 @@ Thank you for helping. Two kinds of contribution matter equally here: **code** (
 ## Setup and tests
 
 ```bash
-git clone https://github.com/<owner>/proposal_agent.git && cd proposal_agent
+git clone https://github.com/mohamadmoin/proposal_agent.git && cd proposal_agent
 python3.12 -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
 ruff check .          # lint

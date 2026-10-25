@@ -21,7 +21,7 @@ researcher is the author** and must check every sentence, number and reference.
 You need [Docker](https://docs.docker.com/get-docker/) with Compose. No API key is needed for the demo.
 
 ```bash
-git clone https://github.com/<owner>/proposal_agent.git && cd proposal_agent
+git clone https://github.com/mohamadmoin/proposal_agent.git && cd proposal_agent
 cp .env.example .env
 docker compose up --build
 ```
@@ -35,6 +35,9 @@ For real proposals, edit `.env`: set `LLM_PROVIDER=openai` (or `gemini`), `LLM_A
 `NCBI_EMAIL=…` (and ideally `NCBI_API_KEY`), a real `DJANGO_SECRET_KEY` and `API_TOKENS`, then
 `docker compose up -d`. More workers: `docker compose up -d --scale worker=3`.
 
+A free-tier model key allows only a few requests per minute. The app waits when the provider asks it to, so a
+proposal still finishes, but more slowly. A paid key gives a full proposal in about 1–2 minutes.
+
 ## Configuration
 
 Everything is set through environment variables (`.env`, documented in `.env.example`).
@@ -43,7 +46,7 @@ Everything is set through environment variables (`.env`, documented in `.env.exa
 |---|---|---|
 | `DJANGO_SECRET_KEY` | demo value in `.env.example` | Django's signing key. Required when `DJANGO_DEBUG=0`; use a long random string. |
 | `DJANGO_DEBUG` | `0` | `1` shows detailed error pages (development only) and opens the API when no tokens are set. |
-| `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Host names the app answers to. |
+| `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Host names the app answers to. Include the internal hostname other services use to reach the API (e.g. `proposal-agent` in a cluster, `host.docker.internal` locally). |
 | `CSRF_TRUSTED_ORIGINS` | empty | Full origins allowed to post forms through a proxy or another domain. |
 | `DJANGO_BEHIND_HTTPS_PROXY` | `0` | `1` when a proxy terminates HTTPS and sends `X-Forwarded-Proto`. |
 | `LOG_LEVEL` | `INFO` | Logging level. |
