@@ -36,12 +36,31 @@ PROVIDERS = {
 }
 
 
+MAX_PROVIDER_WAIT = 45.0  # seconds; a longer requested wait fails the call instead of stalling the job
+
+
 class LLMError(RuntimeError):
     """A model call failed after its retries."""
 
 
 class RetryableError(LLMError):
-    """Rate limit, server error or timeout: worth two more tries."""
+    """Rate limit, server error or timeout: worth two more tries. `delay` = seconds the provider asked us to wait."""
+
+    def __init__(self, message: str, delay: float = 0.0):
+        super().__init__(message)
+        self.delay = delay
+
+
+def retry_delay(exc: Exception) -> float:
+    """The wait a rate-limited provider asks for: a Retry-After header, or "retry in 24.6s" in Gemini's message."""
+    import re
+
+    response = getattr(exc, "response", None)
+    header = response.headers.get("retry-after") if response is not None else None
+    if header and header.replace(".", "", 1).isdigit():
+        return float(header)
+    match = re.search(r"retry in ([0-9.]+)\s*s", str(exc))
+    return float(match.group(1)) if match else 0.0
 
 
 class BadOutputError(LLMError):
@@ -168,7 +187,9 @@ class OpenAIBackend:
                 if message.parsed is None:
                     raise BadOutputError("the answer could not be parsed")
                 text, parsed = message.content or "", message.parsed
-        except (self.openai.RateLimitError, self.openai.InternalServerError) as exc:
+        except self.openai.RateLimitError as exc:
+            raise RetryableError(f"{type(exc).__name__}: {exc}", delay=retry_delay(exc)) from exc
+        except self.openai.InternalServerError as exc:
             raise RetryableError(f"{type(exc).__name__}: {exc}") from exc
         except (self.openai.APITimeoutError, self.openai.APIConnectionError) as exc:
             raise RetryableError(f"{type(exc).__name__}: {exc}") from exc
@@ -243,7 +264,8 @@ class LLM:
                 if transient_left <= 0:
                     raise LLMError(f"{step}: {exc}") from exc
                 transient_left -= 1
-                time.sleep(self.retry_sleep * attempt)
+                # free tiers answer 429 with "retry in 24s": waiting that long once beats failing the step
+                time.sleep(max(self.retry_sleep * attempt, min(exc.delay, MAX_PROVIDER_WAIT) if self.retry_sleep else 0))
                 continue
             except BadOutputError as exc:
                 self.record(step, tier, messages, "", 0, 0, started, "error", str(exc), attempt)

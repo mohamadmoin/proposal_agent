@@ -365,6 +365,8 @@ def sample_size(
             worked += "\n" + line
     if result.rate:
         worked += "\n" + rate_source_line(rate_source, lang)
+    if result.final_total > LARGE_SAMPLE:
+        worked += "\n" + LARGE_SAMPLE_NOTE[lang]
     return {
         "formula": choice.formula,
         "params": result.params,
@@ -383,6 +385,12 @@ def sample_size(
         "notes": notes_from_code + changes,
     }
 
+
+LARGE_SAMPLE = 2000
+LARGE_SAMPLE_NOTE = {
+    "fa": "توجه: حجم نمونه بزرگ است، معمولاً چون تفاوت یا دقت مورد انتظار کوچک انتخاب شده است. پژوهشگر باید بررسی کند که آیا کوچک‌ترین تفاوت دارای اهمیت بالینی یا دقت قابل قبول، مقدار بزرگ‌تری است.",
+    "en": "Note: the sample is large, usually because the expected difference or precision is small. The researcher should check whether the smallest clinically important difference, or an acceptable precision, is larger.",
+}
 
 DIFFERENT_POPULATION = {
     "fa": "توجه: مقدار {name} از مطالعه‌ای گرفته شده است که جمعیت آن ممکن است با جمعیت این پژوهش متفاوت باشد؛ پژوهشگر باید آن را بررسی و تأیید کند.",

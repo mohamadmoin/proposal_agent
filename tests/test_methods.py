@@ -193,3 +193,10 @@ def test_full_methods_with_fake_model(knowledge, fake_llm, offline_pubmed, profi
     assert str(size["final_total"]) in section_33["text"] and section_33["flags"] == []
     assert methods["notes"]["baseline_numbers"]
     assert any(s["lane"].startswith("topic") for s in store.searches)
+
+
+def test_a_very_large_sample_asks_the_researcher_to_check_the_difference(knowledge, profile):
+    size = run_size(knowledge, profile, choice("two_proportions", [param("p1", 0.167), param("p2", 0.147)], rate=None),
+                    design="cohort")  # fmt: skip
+    assert size["final_total"] > 2000
+    assert "smallest clinically important difference" in size["worked"]

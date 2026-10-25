@@ -85,9 +85,11 @@ def run_introduction(
             language=lang,
         )
         part_12 = llm.complete_text("intro_problem", prompt, "strong")
-        if missing_numbers(part_12, "\n".join(f"{s.record.title}\n{s.text}" for s in sources)):
+        unverified = missing_numbers(part_12, "\n".join(f"{s.record.title}\n{s.text}" for s in sources))
+        if unverified:
             flags.append("numbers_unverified")
-            store.warn("Introduction parts 1–2 contain numbers not found in the sources; check them.", STEP)
+            store.warn("Introduction parts 1–2 contain numbers not found in the sources; check them: "
+                       + ", ".join(unverified[:10]) + ".", STEP)
         store.step_done("introduction_problem")
     else:
         store.warn("No StatPearls chapter was found, so the introduction covers only similar studies and the gap.",

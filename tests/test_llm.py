@@ -2,7 +2,7 @@ import pytest
 from pydantic import BaseModel
 
 from engine import prompts
-from engine.llm import LLM, BadOutputError, Completion, LLMConfig, LLMError, RetryableError
+from engine.llm import LLM, BadOutputError, Completion, LLMConfig, LLMError, RetryableError, retry_delay
 
 
 class Answer(BaseModel):
@@ -125,3 +125,8 @@ def test_every_prompt_file_loads():
     assert "screening" in names and "background_paragraph" in names
     for name in names:
         assert prompts.placeholders(name) or name.startswith("reminder")
+
+
+def test_retry_delay_is_read_from_the_provider_message():
+    assert retry_delay(Exception("Quota exceeded ... Please retry in 24.6s.")) == 24.6
+    assert retry_delay(Exception("no hint")) == 0.0

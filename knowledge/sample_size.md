@@ -26,6 +26,10 @@ Notation: Z₁₋α/₂ = 1.96 for α = 0.05 (two-sided); Z₁₋β = 0.8416 for
 
 Non-response / drop-out: n_final = ⌈ n / (1 − rate) ⌉, applied per group, when a rate is given.
 
+A very large result (more than 2,000 in total) usually means the difference or precision to detect is small, e.g.
+two observed proportions only 2 percentage points apart. The calculation stays as computed, and the researcher is
+asked to check whether the smallest clinically important difference (or an acceptable precision) is larger.
+
 ## Reference values (used by the tests)
 
 | Formula | Inputs | Raw n | Reported |
