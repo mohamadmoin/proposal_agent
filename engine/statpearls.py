@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 
 from bs4 import BeautifulSoup
 
+from engine.llm import describe_error
 from engine.pubmed import PubMed
 from engine.retrieval import drop_reason, tfidf_scores
 from engine.schemas import PaperRecord
@@ -137,7 +138,7 @@ def cited_papers(pubmed: PubMed, pmids: list[str], profile_text: str, store: Sto
     try:
         records = [r for r in pubmed.efetch(pmids) if not r.is_book and not drop_reason(r)]
     except Exception as exc:
-        store.warn(f"The chapter's cited papers could not be fetched: {exc}", STEP)
+        store.warn(f"The chapter's cited papers could not be fetched: {describe_error(exc)}", STEP)
         return []
     store.log_search(STEP, "statpearls_cited", f"{len(pmids)} cited PMIDs", len(records), [r.pmid for r in records])
     scores = tfidf_scores([f"{r.title} {r.abstract}" for r in records], profile_text)

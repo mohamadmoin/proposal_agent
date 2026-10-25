@@ -49,3 +49,13 @@ def test_vancouver_statpearls_chapter():
         "Kaur J, Khare S, Givler A. Vitamin D Deficiency. In: StatPearls [Internet]. Treasure Island (FL): "
         "StatPearls Publishing; 2025. Available from: https://www.ncbi.nlm.nih.gov/books/NBK532266/"
     )
+
+
+def test_tokens_grouped_in_one_pair_of_braces_are_numbered():
+    from engine.references import number_document
+    from engine.schemas import PaperRecord
+
+    sources = {k: PaperRecord(pmid=str(i), title=f"T{i}") for i, k in enumerate(["S1", "S2", "S3"], start=1)}
+    out = number_document(["Common risk factors {S1, S2, S3}."], sources)
+    assert out.texts[0] == "Common risk factors [1, 2, 3]."
+    assert not out.unknown_tokens

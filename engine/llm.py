@@ -51,6 +51,19 @@ class RetryableError(LLMError):
         self.delay = delay
 
 
+def describe_error(exc: Exception) -> str:
+    """A short, user-facing reason for a warning; the full error stays in the call log (trace)."""
+    text = f"{type(exc).__name__}: {exc}"
+    if "429" in text or "RateLimit" in text or "RESOURCE_EXHAUSTED" in text:
+        return "the model provider's rate limit or quota was reached"
+    if "Timeout" in text or "timed out" in text:
+        return "the service did not answer in time"
+    if "APIConnection" in text or "ConnectError" in text:
+        return "the service could not be reached"
+    first = str(exc).splitlines()[0] if str(exc) else type(exc).__name__
+    return first[:120]
+
+
 def retry_delay(exc: Exception) -> float:
     """The wait a rate-limited provider asks for: a Retry-After header, or "retry in 24.6s" in Gemini's message."""
     import re

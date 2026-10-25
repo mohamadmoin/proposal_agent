@@ -15,7 +15,7 @@ from typing import Any
 from engine import prompts
 from engine.background import BackgroundResult, paper_block, write_checked
 from engine.knowledge import GENERAL, DesignChoice, Knowledge, normalise_label, resolve_design, section_instruction
-from engine.llm import LLM
+from engine.llm import LLM, describe_error
 from engine.pubmed import PubMed
 from engine.retrieval import drop_reason, profile_query_text, tfidf_scores
 from engine.samplesize import FORMULAS, WORDS, SampleSizeError, compute, prepare_params, worked_calculation
@@ -56,7 +56,7 @@ def decide_design(
     except Exception as exc:
         fallback = resolve_design(knowledge, profile.design_guess, profile.design_guess_other_name)
         fallback = fallback or DesignChoice(GENERAL, "")
-        store.warn(f"The design router failed ({exc}); the profile's design guess was used.", "design_router")
+        store.warn(f"The design router failed ({describe_error(exc)}); the profile's design guess was used.", "design_router")
         store.step_failed("design_router", str(exc))
         return fallback, decision_record(knowledge, fallback, source="profile")
     label = normalise_label(out.label)
@@ -507,7 +507,7 @@ def run_methods(
     except Exception as exc:
         notes = {}
         store.step_failed("methods_notes", str(exc))
-        store.warn(f"The methods notes could not be written ({exc}); the sub-sections use the topic summaries only.")
+        store.warn(f"The methods notes could not be written ({describe_error(exc)}); the sub-sections use the topic summaries only.")
 
     size, size_error = None, ""
     if knowledge.design(design.label).sample_size:

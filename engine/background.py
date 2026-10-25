@@ -13,7 +13,7 @@ from typing import Any
 
 from engine import prompts
 from engine.knowledge import DesignChoice, Knowledge
-from engine.llm import LLM
+from engine.llm import LLM, describe_error
 from engine.pubmed import PubMed
 from engine.retrieval import (
     MIN_UNION,
@@ -108,7 +108,7 @@ def run_lanes(
             result = pubmed.esearch(lane.query, retmax=lane.retmax, sort="relevance")
         except Exception as exc:  # one broken lane must not stop the others
             store.log_search(STEP, lane.name, lane.query, 0, [], error=str(exc))
-            store.warn(f"PubMed search lane '{lane.name}' failed: {exc}", STEP)
+            store.warn(f"PubMed search lane '{lane.name}' failed: {describe_error(exc)}", STEP)
             continue
         store.log_search(STEP, lane.name, lane.query, result.count, result.pmids)
         if lane.name == "core" and not result.pmids:

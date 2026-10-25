@@ -14,6 +14,8 @@ from engine.schemas import PaperRecord
 
 TOKEN_RUN = re.compile(r"[ \t]*(\{[A-Z]\d+\}(?:[\s,;،؛]*\{[A-Z]\d+\})*)")
 SINGLE = re.compile(r"\{([A-Z]\d+)\}")
+# models sometimes put several tokens in one pair of braces: {S1, S2, S3} → {S1}{S2}{S3}
+GROUPED = re.compile(r"\{\s*([A-Z]\d+(?:\s*[,،;؛]\s*[A-Z]\d+)+)\s*\}")
 BOOKSHELF = "https://www.ncbi.nlm.nih.gov/books/"
 PUBMED = "https://pubmed.ncbi.nlm.nih.gov/"
 
@@ -34,6 +36,10 @@ def source_key(record: PaperRecord) -> str:
     if record.book_accession:
         return f"nbk:{record.book_accession}"
     return f"title:{record.title.lower()}"
+
+
+def split_grouped(text: str) -> str:
+    return GROUPED.sub(lambda m: "".join("{" + t + "}" for t in re.split(r"\s*[,،;؛]\s*", m.group(1))), text)
 
 
 def number_document(texts: list[str], sources: dict[str, PaperRecord]) -> Numbering:
@@ -65,7 +71,7 @@ def number_document(texts: list[str], sources: dict[str, PaperRecord]) -> Number
             return ""
         return " [" + ", ".join(str(n) for n in sorted(cited)) + "]"
 
-    out = [tidy(TOKEN_RUN.sub(replace, text)) for text in texts]
+    out = [tidy(TOKEN_RUN.sub(replace, split_grouped(text))) for text in texts]
     references = [
         {
             "number": number,

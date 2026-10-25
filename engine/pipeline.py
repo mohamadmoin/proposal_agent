@@ -17,7 +17,7 @@ from typing import Any
 from engine.background import BackgroundResult, run_background
 from engine.introduction import run_introduction
 from engine.knowledge import DesignChoice, Knowledge
-from engine.llm import LLM
+from engine.llm import LLM, describe_error
 from engine.methods import decide_design, run_methods, write_aims
 from engine.profile import build_profile
 from engine.pubmed import PubMed
@@ -116,7 +116,7 @@ def run(
         except Exception as exc:
             log.warning("section %s failed: %s\n%s", key, exc, traceback.format_exc())
             store.step_failed(step, str(exc))
-            store.warn(f"The {key} step failed: {exc}", step)
+            store.warn(f"The {key} step failed: {describe_error(exc)}", step)
             if requested:
                 publish(key, failed(key, lang, str(exc)))
             return None
