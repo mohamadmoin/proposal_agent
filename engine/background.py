@@ -292,6 +292,7 @@ def run_background(
     if selection.warning:
         store.warn(selection.warning, "background")
     result = BackgroundResult(candidates=candidates, selected=selection.selected)
+    save_candidates(store, candidates, {})  # the chosen studies are visible while their paragraphs are written
 
     if write and selection.selected:
         store.step_started("background_writing", f"Writing {len(selection.selected)} paragraphs")
@@ -310,7 +311,12 @@ def run_background(
             result.paragraphs.append(output)
         store.step_done("background_writing", f"{len(result.paragraphs)} paragraphs written")
 
-    paragraphs = {p["token"]: p["text"] for p in result.paragraphs}
+    save_candidates(store, [c for c in candidates if c.selected], {p["token"]: p["text"] for p in result.paragraphs})
+    return result
+
+
+def save_candidates(store: Store, candidates: list[Candidate], paragraphs: dict[str, str]) -> None:
+    """Store every screened paper (stores upsert by role + PMID, so saving again adds the paragraphs)."""
     for candidate in candidates:
         store.save_paper(
             "background",
@@ -324,4 +330,3 @@ def run_background(
             flags=candidate.flags,
             stage="selected" if candidate.selected else "screened",
         )
-    return result
