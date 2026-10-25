@@ -82,6 +82,16 @@ def test_two_retries_on_transient_errors(knowledge):
         llm.complete_json("s", Answer, "u")
 
 
+def test_strong_model_failure_falls_back_to_the_small_model(knowledge):
+    records = []
+    config = LLMConfig(provider="gemini", api_key="x", model_small="lite", model_strong="big")
+    llm = LLM(config, knowledge, ScriptedBackend([RetryableError("timeout"), ok(3)]), records.append)
+    llm.retry_sleep = 0
+    assert llm.complete_json("intro", Answer, "u", "strong").value == 3
+    assert [c[1] for c in llm.backend.calls] == ["strong", "small"]
+    assert [r["status"] for r in records] == ["error", "fallback", "ok"]
+
+
 def test_one_retry_on_bad_output(knowledge):
     llm, _ = make(knowledge, [BadOutputError("refusal"), ok()])
     assert llm.complete_json("s", Answer, "u").value == 1

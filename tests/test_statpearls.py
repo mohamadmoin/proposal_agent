@@ -1,4 +1,4 @@
-from engine.statpearls import cited_papers, find_chapter, gather_sources, parse_uploaded_html
+from engine.statpearls import cited_papers, find_chapter, gather_sources, is_archived, parse_uploaded_html
 from engine.store import MemoryStore
 from tests.conftest import FIXTURES
 
@@ -53,3 +53,8 @@ def test_sources_from_an_upload_use_the_page_text(offline_pubmed):
     assert sources[0].record.book_accession == "NBK532266"  # matched to the API record
     assert "It affects bone health" in sources[0].text
     assert {s.record.pmid for s in sources[1:]} <= {"31101452", "12897318", "24239505"}
+
+
+def test_archived_chapters_are_recognised():
+    assert is_archived("Iron-Deficiency Anemia (Archived)")
+    assert not is_archived("Iron Deficiency Anemia")

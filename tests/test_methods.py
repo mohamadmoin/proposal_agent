@@ -113,6 +113,25 @@ def test_paper_value_found_is_cited(knowledge, profile):
     assert "{P1}" in size["worked"] and "359" in size["worked"]
 
 
+def test_value_from_a_dissimilar_population_is_flagged_for_the_researcher(knowledge, profile):
+    llm = llm_with(knowledge, {"sample_size": [choice("single_proportion", [param("p", 0.3, "paper", "P1"),
+                                                                             param("d", 0.05, "convention")])]})  # fmt: skip
+    notes = {"baseline_numbers": [{"token": "P1", "value": "30", "population_similarity": 1}]}
+    size = sample_size(profile, ProposalRequest(title=TITLE, language="en"), resolve_design(knowledge, "cross_sectional"),
+                       knowledge, llm, notes, {"P1": PAPER}, "en")  # fmt: skip
+    assert size["sources"]["p"] == "{P1}"
+    assert "population may differ" in size["worked"]
+
+
+def test_value_from_a_similar_population_is_not_flagged(knowledge, profile):
+    llm = llm_with(knowledge, {"sample_size": [choice("single_proportion", [param("p", 0.3, "paper", "P1"),
+                                                                             param("d", 0.05, "convention")])]})  # fmt: skip
+    notes = {"baseline_numbers": [{"token": "P1", "value": "30", "population_similarity": 3}]}
+    size = sample_size(profile, ProposalRequest(title=TITLE, language="en"), resolve_design(knowledge, "cross_sectional"),
+                       knowledge, llm, notes, {"P1": PAPER}, "en")  # fmt: skip
+    assert "population may differ" not in size["worked"]
+
+
 def test_paper_value_not_found_becomes_assumption(knowledge, profile):
     size = run_size(knowledge, profile, choice("single_proportion", [param("p", 0.42, "paper", "P1"),
                                                                         param("d", 0.05, "convention")]))  # fmt: skip

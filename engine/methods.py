@@ -266,12 +266,23 @@ def methods_notes(
         token = number["token"].strip("{} ")
         record = sources.get(token)
         if record and not missing_numbers(number["value"], record.abstract):
-            kept.append({**number, "token": token})
+            kept.append({**number, "token": token, **population_of(token, record, background)})
         else:
             dropped.append(number)
     notes["baseline_numbers"] = kept
     notes["dropped_baseline_numbers"] = dropped
     return notes
+
+
+def population_of(token: str, record: PaperRecord, background: BackgroundResult | None) -> dict[str, Any]:
+    """Who the number was measured in: a sample size needs a parameter from a population like the study's."""
+    candidate = background.by_token().get(token) if background else None
+    screening = candidate.screening if candidate else {}
+    return {
+        "paper_title": record.title,
+        "paper_country": screening.get("country") or "",
+        "population_similarity": screening.get("population_similarity"),
+    }
 
 
 # --- 4. sample size -----------------------------------------------------------------------------------------------
@@ -338,6 +349,10 @@ def sample_size(
             continue
         values[param.name] = param.value
         param_sources[param.name] = checked_source(param.source, param.token, param.value, sources, changes, param.name)
+    similarity = {n["token"]: n.get("population_similarity") for n in notes.get("baseline_numbers", [])}
+    for param in choice.parameters:
+        if param_sources.get(param.name, "").startswith("{") and (similarity.get(param.token.strip("{} ")) or 0) < 2:
+            changes.append(DIFFERENT_POPULATION[lang].format(name=param.name))
     params, notes_from_code = prepare_params(choice.formula, values)
     for name in params:
         param_sources.setdefault(name, "convention")
@@ -345,6 +360,9 @@ def sample_size(
     rate_source = checked_source(choice.rate_source, choice.rate_token, rate, sources, changes, "rate") if rate else ""
     result = compute(choice.formula, params, rate)
     worked = worked_calculation(result, param_sources, lang)
+    for line in changes:
+        if line.startswith(DIFFERENT_POPULATION[lang][:12]):
+            worked += "\n" + line
     if result.rate:
         worked += "\n" + rate_source_line(rate_source, lang)
     return {
@@ -364,6 +382,12 @@ def sample_size(
         "reasoning": choice.reasoning,
         "notes": notes_from_code + changes,
     }
+
+
+DIFFERENT_POPULATION = {
+    "fa": "توجه: مقدار {name} از مطالعه‌ای گرفته شده است که جمعیت آن ممکن است با جمعیت این پژوهش متفاوت باشد؛ پژوهشگر باید آن را بررسی و تأیید کند.",
+    "en": "Note: the value of {name} comes from a study whose population may differ from this study's; the researcher must check and confirm it.",
+}
 
 
 def rate_source_line(source: str, lang: str) -> str:

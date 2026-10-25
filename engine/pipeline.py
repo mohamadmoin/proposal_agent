@@ -56,8 +56,14 @@ class UsageMeter:
         self.prompt_tokens = 0
         self.completion_tokens = 0
         self.cost: float | None = None
+        self.fallbacks: list[str] = []
 
     def __call__(self, record: dict[str, Any]) -> None:
+        if record.get("status") == "fallback":
+            with self.lock:
+                self.fallbacks.append(record["step"])
+            self.store.log_call(record)
+            return
         with self.lock:
             self.calls += 1
             self.prompt_tokens += record.get("prompt_tokens") or 0
@@ -292,6 +298,8 @@ def finish(
 ) -> dict[str, Any]:
     """Number the citations, enforce "never done and empty", compute the job status and save the result."""
     lang = request.language
+    for step in sorted(set(meter.fallbacks)):
+        store.warn(f"The strong model did not answer for the {step} step; the small model wrote it instead.", step)
     for key, section in list(sections.items()):
         if section["status"] == "done" and section_is_empty(section, key):
             sections[key] = failed(key, lang, "the section came out empty")

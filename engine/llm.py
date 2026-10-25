@@ -234,6 +234,12 @@ class LLM:
                 completion = self.backend.call(messages, tier, schema, step=step)
             except RetryableError as exc:
                 self.record(step, tier, messages, "", 0, 0, started, "error", str(exc), attempt)
+                if tier == "strong" and self.config.model("small") != self.config.model("strong"):
+                    # A strong model that times out or is overloaded would stall the whole job for minutes: the
+                    # small model writes this step instead, and the user is told (UsageMeter → warning).
+                    self.record(step, "small", messages, "", 0, 0, time.monotonic(), "fallback",
+                                f"strong model failed ({exc}); the small model was used", attempt)
+                    return self.call(step, user, "small", schema)
                 if transient_left <= 0:
                     raise LLMError(f"{step}: {exc}") from exc
                 transient_left -= 1

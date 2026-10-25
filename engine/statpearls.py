@@ -120,8 +120,13 @@ def find_chapter(pubmed: PubMed, terms: str, profile_text: str, store: Store) ->
     if not chapters:
         return None
     scores = tfidf_scores([c.title for c in chapters], profile_text)
-    best = max(range(len(chapters)), key=lambda i: (scores[i], -i))
+    # StatPearls keeps superseded chapters as "(Archived)"; a current chapter on the topic always wins
+    best = max(range(len(chapters)), key=lambda i: (not is_archived(chapters[i].title), scores[i], -i))
     return chapters[best]
+
+
+def is_archived(title: str) -> bool:
+    return "(archived)" in (title or "").lower()
 
 
 def cited_papers(pubmed: PubMed, pmids: list[str], profile_text: str, store: Store) -> list[PaperRecord]:
