@@ -1,7 +1,8 @@
 # The build prompt
 
-This is the exact prompt given to a fresh Claude Code session, started in this repository when it held only
-`knowledge/`, `docs/DESIGN.md` and `workshop/`. `PROMPT_ANNOTATED.md` explains which lines carry medical expertise
+This is the prompt given to a fresh Claude Code session, started in this repository when it held only
+`knowledge/`, `docs/DESIGN.md` and `workshop/`. Version 2: it now also carries the lessons of the first live runs
+(see the last section of `PROMPT_ANNOTATED.md`). `PROMPT_ANNOTATED.md` explains which lines carry medical expertise
 and which carry engineering.
 
 ---
@@ -52,8 +53,10 @@ From the title, the purpose and the design hint, return:
   `outcomes`;
 - `design_guess`: a label from `designs.yaml`, or "other" plus a name;
 - `concepts`: 2–5 English concept names;
-- `core_query`: a PubMed Boolean query. Each concept is written as `("MeSH term"[mh] OR synonym[tiab] OR …)` and the
-  concepts are joined with AND. No filters, no dates;
+- `core_query`: a PubMed Boolean query of the study's subject only: the condition (or exposure) and the population,
+  at most 3 blocks. Each block is written as `("MeSH term"[mh] OR synonym[tiab] OR …)` and the blocks are joined
+  with AND. No filters, no dates, and never a block for what is measured or how (prevalence, associated factors,
+  effect, design words): those words hide the most similar studies;
 - `plain_query`: 2–4 plain words with no field tags;
 - `statpearls_terms`: 1–3 words naming the disease or condition.
 
@@ -109,8 +112,13 @@ From the title, the purpose and the design hint, return:
 4. **Sample size** (1 call + code), exactly as in `sample_size.md`.
    - The model picks a formula from the design's list and fills the parameters, each with a source: `paper` (with a
      token), `convention` or `assumption`. It may also give a non-response or drop-out rate.
+   - Each baseline number carries how similar its paper's population is to the study's. The model must choose
+     values from the most similar population (then the same country, then the most recent).
    - Code then:
      - validates the parameter names for the formula;
+     - flags, in the worked calculation, a value taken from a paper whose population may differ;
+     - adds a note when the total exceeds 2,000, asking the researcher to check the smallest clinically important
+       difference;
      - turns paper-sourced values that cannot be found in that paper into assumptions;
      - computes, rounds up, inflates for the rate;
      - writes a worked calculation (formula, substituted values, result) in the output language.
@@ -129,7 +137,8 @@ From the title, the purpose and the design hint, return:
 ### 2.4 Introduction: follow `knowledge/introduction.md`
 1. **StatPearls through the API only.**
    - Search `(<statpearls_terms>) AND statpearls[book]` (5 results) and efetch the records (`PubmedBookArticle`).
-   - Pick the chapter whose title is most similar (TF-IDF) to the profile.
+   - Pick the chapter whose title is most similar (TF-IDF) to the profile. A current chapter always wins over one
+     marked "(Archived)".
    - Keep the chapter summary (abstract), its section titles, its reference list with PMIDs, its NBK accession and
      its date.
    - Fetch the abstracts of up to 8 of its cited PMIDs, ranked by similarity to the profile.
@@ -149,7 +158,8 @@ From the title, the purpose and the design hint, return:
 ### 2.5 References and numbering (code only)
 - Replace the tokens with numbers in order of first appearance through the document. The order is Introduction →
   Aims → Background → Methods.
-- Merge adjacent citations into one bracket (`[1, 2]`). Remove unknown tokens and log them.
+- Merge adjacent citations into one bracket (`[1, 2]`). Accept several tokens written inside one pair of braces
+  (`{S1, S2}`). Remove unknown tokens and log them.
 - Vancouver style:
   - authors: up to 6, then "et al.";
   - then title, journal, `Year;Volume(Issue):Pages`, `doi:` and `PMID:`;
@@ -234,6 +244,11 @@ tests/           unit tests per engine module, fixtures/, API + worker + end-to-
   `reasoning_effort` from `LLM_REASONING_EFFORT` (default `none`) and `LLM_REASONING_EFFORT_STRONG` (default `low`);
   an empty value means it is not sent.
 - Timeout `LLM_TIMEOUT` (90 s). Two retries on 429, 5xx and timeouts; one retry on a refusal or an invalid parse.
+  On a 429, wait as long as the provider asks (`Retry-After`, or Gemini's "retry in Ns"), up to 45 s.
+- When the strong model times out or is overloaded, the small model writes that step and the user gets a warning.
+  A strong model must never stall a job for minutes.
+- Warnings shown to users give a short reason ("the provider's rate limit was reached"), never a raw error dump.
+  The full error stays in the call log.
   Parallel calls through a thread pool of `LLM_MAX_PARALLEL` (4).
 - Every call is reported to the store: step, model, messages, response, tokens, latency, status. The cost is shown
   only if `LLM_PRICE_INPUT_PER_M` and `LLM_PRICE_OUTPUT_PER_M` are set.
@@ -294,7 +309,8 @@ tests/           unit tests per engine module, fixtures/, API + worker + end-to-
 
 ### 4.9 Configuration
 Everything comes from the environment. Commit an `.env.example` that documents every variable with a safe default:
-- Django: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`;
+- Django: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS` (include the internal hostname other services
+  use to reach the API), `CSRF_TRUSTED_ORIGINS`;
 - database: `DATABASE_URL` (plus the MySQL variables for compose);
 - model: the `LLM_*` variables;
 - PubMed: the `NCBI_*` variables;

@@ -21,9 +21,9 @@ The finished agent runs live inside DrNext Academy at the end.
 | 12–25 | Expertise → pipeline | 8–14 | How an expert writes a پیشینه and a methods section, turned into steps a cheap model can do |
 | 25–45 | The stack, one concept at a time | 15–27 | Just enough of each tool to know why it is there |
 | 45–58 | The prompt, broken down | 28–33 | The build prompt line by line: which lines are medicine, which are engineering |
-| 58–63 | Quality and responsibility | 34–35 | Evaluation, citations, authorship, licences |
-| 63–69 | GitHub and open source | 36–38 | How to run it, read it, and contribute |
-| 69–75 | DrNext Academy | 39–41 | Live demo, early announcement, Q&A |
+| 58–63 | Quality and responsibility | 34–36 | Evaluation, citations, authorship, licences |
+| 63–69 | GitHub and open source | 37–39 | How to run it, read it, and contribute |
+| 69–75 | DrNext Academy | 40–42 | Live demo, early announcement, Q&A |
 
 ## Slides
 
@@ -59,7 +59,7 @@ Each slide has a one-sentence definition, the role in this app, and 1–2 links.
 21. **HTML parsing reads web pages as data, and licences decide what you may keep.** BeautifulSoup; StatPearls and NCBI Bookshelf terms (CC BY-NC-ND).
 22. **Django gives you a web app, an admin and a database layer in one.** Models, views, admin, migrations.
 23. **MySQL stores jobs and every intermediate result, so each sentence is traceable.** Tables for proposal, papers, notes and sections.
-24. **Long jobs run in the background.** A queue and a worker (Celery + Redis); the page polls for progress.
+24. **Long jobs run in the background.** A worker process picks queued jobs from the database (`SELECT … FOR UPDATE SKIP LOCKED`); the page polls for progress. Celery + Redis is the usual next step when a project grows.
 25. **Docker packages the app so it runs the same everywhere.** Image, container, Compose: one command starts everything.
 26. **Configuration lives in the environment, never in the code.** `.env`, secrets, 12-factor.
 27. **Tests prove each step still works.** pytest; recorded API responses, so tests need no keys.
@@ -69,21 +69,22 @@ Each slide has a one-sentence definition, the role in this app, and 1–2 links.
 29. **These lines are medicine.** Highlighted excerpts: "strictly similar in aims and design", "newer is better", "5–10 papers", the 10-item per-paper checklist, the design questionnaire, the ۳-۱ … ۳-۵ form, the aims frames, "write narratively, not as bullet points".
 30. **These lines are search engineering.** 12 phrases of at most 6 words, 200 results each, TF-IDF > 0.3 on titles, dedupe by PMID, rank only titles plus dates.
 31. **These lines are software engineering.** Stack, repo layout, Pydantic schemas, Docker Compose, env vars, tests, "work in small verified steps".
-32. **Then an AI coding agent builds it from the prompt.** Screen recording (time-lapse) of Claude Code following the prompt in an empty repo.
-33. **What came out.** Repo tree and the running app.
+32. **An AI coding agent built it from the prompt in about an hour.** Screen recording (time-lapse): eight milestones, 143 tests, a commit after each, and a `QUESTIONS.md` of 22 decisions it wants a clinician to confirm.
+33. **What came out.** Repo tree and the running app (form → live progress → sections → Word file).
 
 ### Quality and responsibility (58–63)
-34. **You measure quality, you don't assume it.** A small evaluation set across designs, a rubric (reporting items, traceable numbers, correct sample size, valid references), and an expert read.
-35. **The tool drafts; the researcher is the author.** University rules on AI disclosure, plagiarism, checking every claim; licences of sources.
+34. **Real runs found what tests could not: four of nine problems were medical judgement.** The table from `PROMPT_ANNOTATED.md` (query hid the closest studies, prevalence from the wrong population, archived chapter, 10,386-person sample) and how each became a prompt line.
+35. **You measure quality, you don't assume it.** A small evaluation set across designs, a rubric (reporting items, traceable numbers, correct sample size, valid references), and an expert read.
+36. **The tool drafts; the researcher is the author.** University rules on AI disclosure, plagiarism, checking every claim; licences of sources.
 
 ### GitHub and open source (63–69)
-36. **Git saves history; GitHub is where code lives together.** Commit, branch, pull request, issue. *Learn more:* Pro Git; GitHub Skills.
-37. **Run it in three commands.** `git clone` → copy `.env.example` → `docker compose up`.
-38. **Help make research tools better.** How to contribute (CONTRIBUTING.md, good-first-issues): new study designs, other sections, better evaluation sets, translations.
+37. **Git saves history; GitHub is where code lives together.** Commit, branch, pull request, issue. *Learn more:* Pro Git; GitHub Skills.
+38. **Run it in three commands.** `git clone` → copy `.env.example` → `docker compose up`.
+39. **Help make research tools better.** How to contribute (CONTRIBUTING.md, good-first-issues): new study designs, other sections, better evaluation sets, translations.
 
 ### DrNext Academy (69–75)
-39. **The same agent, inside DrNext Academy.** Live demo: open it from the Academy home and generate a section; then ask Fandogh, which calls it as a tool.
-40. **The Academy will be open to apps built by you.** Early announcement: a draft app standard exists; the developer programme comes after the beta. Build something useful and talk to us.
-41. **Questions, and where to go next.** Resources slide (all links), repo QR, contact.
+40. **The same agent, inside DrNext Academy.** Live demo: open it from the Academy home and generate a section; then ask Fandogh, which calls it as a tool.
+41. **The Academy will be open to apps built by you.** Early announcement: a draft app standard exists; the developer programme comes after the beta. Build something useful and talk to us.
+42. **Questions, and where to go next.** Resources slide (all links), repo QR, contact.
 
 **Backup slides** (not presented): cost and latency table, data model, full pipeline with call counts, sample-size formulas.
