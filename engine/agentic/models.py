@@ -1,7 +1,7 @@
 """The agent's models, built from the environment.
 
 - lead:   the researcher. Makes the hard decisions (design, primary outcome, sample-size parameters) and writes the
-          sections with the whole proposal in view. Default gemini-3.8-flash, thinking "low" (AGENT_LEAD_THINKING).
+          sections with the whole proposal in view. Default gemini-3.8-flash, thinking "medium" (AGENT_LEAD_THINKING).
 - worker: bulk work whose output code can check (screening, data extraction, one-study paragraphs). Default
           gemini-3.1-flash-lite, thinking "low".
 Each has an optional OpenAI fallback (gpt-5.4-mini through the Responses API, as in dose_calculator's platform agent)
@@ -23,7 +23,7 @@ from pydantic_ai.models.fallback import FallbackModel
 log = logging.getLogger(__name__)
 
 DEFAULTS = {
-    "lead": ("gemini-3.8-flash", "low"),  # S3 gate (AGT-20): low judged 3.93 vs medium 3.64 on 4 titles, cheaper
+    "lead": ("gemini-3.8-flash", "medium"),  # S4b gate: low scored about 0.6 lower on 4 paired titles (DEC-A11)
     "worker": ("gemini-3.1-flash-lite", "low"),
     "fallback": ("gpt-5.4-mini", "low"),
 }

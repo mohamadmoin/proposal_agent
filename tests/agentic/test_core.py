@@ -20,8 +20,8 @@ class ModelFactoryTests(unittest.TestCase):
     def test_builds_gemini_models_without_fallback(self):
         m = build_models({"GOOGLE_API_KEY": "dummy"})
         self.assertEqual(m.names, {"lead": "gemini-3.8-flash", "worker": "gemini-3.1-flash-lite",
-                                   "lead_thinking": "low", "worker_thinking": "low"})
-        self.assertEqual(m.lead.settings["google_thinking_config"], {"thinking_level": "low"})
+                                   "lead_thinking": "medium", "worker_thinking": "low"})
+        self.assertEqual(m.lead.settings["google_thinking_config"], {"thinking_level": "medium"})
         self.assertEqual(m.worker.settings["google_thinking_config"], {"thinking_level": "low"})
 
     def test_openai_key_adds_fallback(self):
