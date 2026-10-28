@@ -65,11 +65,11 @@ def test_router_answers_twelve_questions_with_the_strong_model(knowledge, profil
 
 
 def test_router_unknown_label_uses_general(knowledge, profile):
-    answer = {"answers": [], "label": "diagnostic_accuracy", "other_name": "Diagnostic accuracy study",
+    answer = {"answers": [], "label": "case_series", "other_name": "Case series",
               "rationale": "One. Two. Three. Four.", "missing_information": []}  # fmt: skip
     llm = llm_with(knowledge, {"design_router": [answer]})
     choice, record = decide_design(ProposalRequest(title=TITLE), profile, knowledge, llm, MemoryStore())
-    assert choice == DesignChoice("general", "Diagnostic accuracy study")
+    assert choice == DesignChoice("general", "Case series")
     assert record["rationale"] == "One. Two. Three."
     assert record["answers"][0]["answer"] == "not answered"
 

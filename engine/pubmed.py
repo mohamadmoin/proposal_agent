@@ -150,14 +150,30 @@ class PubMedClient:
         return SearchResult(count=int(result.get("count") or 0), pmids=list(result.get("idlist") or []))
 
     def efetch(self, pmids: list[str]) -> list[PaperRecord]:
+        """Fetch records in chunks. An HTTP 400 (which is not retried) splits the chunk until the bad id is found;
+        that id is skipped and listed in `self.skipped` instead of failing the whole fetch (AGT-3.1)."""
         records: list[PaperRecord] = []
+        self.skipped: list[str] = []
         unique = list(dict.fromkeys(p for p in pmids if p))
         for start in range(0, len(unique), EFETCH_CHUNK):
-            chunk = unique[start : start + EFETCH_CHUNK]
-            params = {**self.common_params(), "id": ",".join(chunk), "retmode": "xml"}
-            response = self.request("efetch.fcgi", params, post=True)
-            records.extend(parse_pubmed_xml(response.content))
+            records.extend(self._efetch_chunk(unique[start : start + EFETCH_CHUNK]))
+        if self.skipped:
+            log.warning("PubMed efetch skipped %d id(s) after HTTP 400: %s", len(self.skipped), ",".join(self.skipped))
         return records
+
+    def _efetch_chunk(self, chunk: list[str]) -> list[PaperRecord]:
+        params = {**self.common_params(), "id": ",".join(chunk), "retmode": "xml"}
+        try:
+            response = self.request("efetch.fcgi", params, post=True)
+        except PubMedError as exc:
+            if "HTTP 400" not in str(exc):
+                raise
+            if len(chunk) == 1:
+                self.skipped.append(chunk[0])
+                return []
+            mid = len(chunk) // 2
+            return self._efetch_chunk(chunk[:mid]) + self._efetch_chunk(chunk[mid:])
+        return parse_pubmed_xml(response.content)
 
 
 # --- XML parsing --------------------------------------------------------------------------------------------------

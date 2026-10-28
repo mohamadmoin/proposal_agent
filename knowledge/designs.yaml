@@ -189,7 +189,34 @@ designs:
         fa: "روش فراتحلیل (مدل اثر ثابت یا تصادفی)، آماره‌های ناهمگونی (I²)، بررسی سوگیری انتشار و آنالیز حساسیت را شرح دهید."
         en: "Describe the meta-analysis (fixed or random effects), heterogeneity statistics (I²), publication-bias assessment and sensitivity analysis."
 
-  general:   # fallback for any other design (qualitative, case series, diagnostic accuracy, …): never fail on an unknown label
+  diagnostic_accuracy:
+    name: {fa: "مطالعه دقت تشخیصی", en: "Diagnostic accuracy study"}
+    pubmed_filter: '"Sensitivity and Specificity"[mh] OR "diagnostic accuracy"[tiab] OR sensitivity[tiab]'
+    search_topics:
+      - diagnostic accuracy STARD reporting
+      - reference standard verification bias
+      - indeterminate test results handling
+      - sample size sensitivity specificity
+      - ROC curve threshold selection
+    sample_size: [diagnostic_accuracy]
+    sections:
+      conduct:
+        fa: "نحوه اجرای مطالعه دقت تشخیصی را مطابق STARD شرح دهید: آزمون مورد ارزیابی (index test) با آستانه مثبت از پیش تعیین‌شده، استاندارد مرجع، فاصله زمانی بین دو آزمون، کورسازی خوانندگان هر آزمون نسبت به نتیجه دیگری، و راهبرد تأیید برای همه شرکت‌کنندگان (برای پیشگیری از سوگیری تأیید ناقص یا متفاوت)."
+        en: "Describe how the diagnostic accuracy study is conducted, following STARD: the index test with its pre-specified positivity threshold, the reference standard, the interval between the tests, blinding of each test's readers to the other's result, and the verification strategy for all participants (to prevent partial or differential verification bias)."
+      population:
+        fa: "جمعیت هدف را جمعیت مصرف‌کننده واقعی آزمون (بیماران مشکوک در همان محیط بالینی) تعریف کنید، نه موارد قطعی و افراد سالم جداگانه. نمونه‌گیری متوالی یا تصادفی، معیارهای ورود و خروج و نحوه تعریف بیماری هدف را بیان کنید."
+        en: "Define the population as the intended-use population of the test (suspected patients in that clinical setting), not separate confirmed cases and healthy people. State the consecutive or random sampling, the eligibility criteria and how the target condition is defined."
+      sample_size:
+        fa: "حجم نمونه را برای دقت برآورد حساسیت (و در صورت نیاز ویژگی) با روش Buderer محاسبه کنید: تعداد بیماران لازم بر شیوع مورد انتظار بیماری در جمعیت هدف تقسیم می‌شود. منبع حساسیت و شیوع را ذکر کنید. عدد نهایی حجم نمونه را دقیقاً همان‌طور که داده شده ذکر کنید."
+        en: "Compute the sample size for the precision of sensitivity (and specificity if needed) with Buderer's method: the required number of diseased participants is divided by the expected prevalence in the intended-use population. Give the source of the sensitivity and the prevalence. Give the final sample size exactly as provided."
+      data_collection:
+        fa: "نحوه انجام و ثبت آزمون مورد ارزیابی و استاندارد مرجع (فرد اجراکننده، تجهیزات، فرم ثبت)، ثبت نتایج نامشخص یا غیرتشخیصی، و پیگیری بیمارانی که استاندارد مرجع قطعی برایشان انجام نمی‌شود را شرح دهید."
+        en: "Describe how the index test and the reference standard are performed and recorded (who performs them, equipment, recording form), how indeterminate or non-diagnostic results are recorded, and the follow-up of patients without a definitive reference standard."
+      analysis:
+        fa: "حساسیت، ویژگی، ارزش اخباری مثبت و منفی و نسبت‌های درست‌نمایی را با فاصله اطمینان ۹۵ درصد گزارش کنید؛ برای آزمون‌های کمی منحنی ROC و سطح زیر منحنی را بیان کنید. نحوه ورود نتایج نامشخص به جدول ۲×۲ (تحلیل اصلی و تحلیل حساسیت با فرض بدترین و بهترین حالت) را مشخص کنید."
+        en: "Report sensitivity, specificity, positive and negative predictive values and likelihood ratios with 95% CIs; for quantitative tests give the ROC curve and AUC. State how indeterminate results enter the 2×2 table (main analysis and a worst- and best-case sensitivity analysis)."
+
+  general:   # fallback for any other design (qualitative, case series, …): never fail on an unknown label
     name: {fa: "سایر طراحی‌ها", en: "Other design"}
     pubmed_filter: ''
     search_topics:

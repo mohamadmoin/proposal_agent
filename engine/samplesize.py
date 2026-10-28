@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from statistics import NormalDist
 
 CONVENTIONS = {"alpha": 0.05, "power": 0.80}
-PROPORTION_PARAMS = {"p", "p0", "p1", "p2", "alpha", "power"}
+PROPORTION_PARAMS = {"p", "p0", "p1", "p2", "alpha", "power", "sensitivity", "specificity", "prevalence"}
 
 
 class SampleSizeError(ValueError):
@@ -89,6 +89,16 @@ FORMULAS: dict[str, Formula] = {
         {"alpha": 0.05, "power": 0.80, "r": 1.0},
         2,
         "p₁ = OR × p₀ / (1 + p₀ × (OR − 1)), then the two-proportions formula with p₁ (cases) and p₀ (controls)",
+    ),
+    # Buderer 1996: precision of sensitivity is set by the diseased participants, of specificity by the others
+    "diagnostic_accuracy": Formula(
+        "diagnostic_accuracy",
+        {"en": "diagnostic accuracy (Buderer)", "fa": "دقت تشخیصی (روش Buderer)"},
+        ("sensitivity", "prevalence", "d"),
+        {"specificity": None, "alpha": 0.05},
+        1,
+        "n(Se) = Z(1−α/2)² × Se × (1 − Se) / (d² × Prev); n(Sp) = Z(1−α/2)² × Sp × (1 − Sp) / (d² × (1 − Prev)); "
+        "n = max(n(Se), n(Sp))",
     ),
 }
 
@@ -173,7 +183,7 @@ def check_ranges(formula_id: str, params: dict[str, float]) -> None:
         if name in params and not (low < params[name] < high):
             raise SampleSizeError(f"{formula_id}: {name} = {params[name]} must be between {low} and {high}")
 
-    for name in ("p", "p0", "p1", "p2", "alpha", "power"):
+    for name in ("p", "p0", "p1", "p2", "alpha", "power", "sensitivity", "specificity", "prevalence"):
         between(name, 0, 1)
     if formula_id == "correlation":
         between("r", -1, 1)
@@ -242,6 +252,18 @@ def raw_case_control(p: dict[str, float], extra: dict[str, float]) -> float:
     return two_proportions_n1(p1, p0, p["alpha"], p["power"], p["r"])
 
 
+def raw_diagnostic_accuracy(p: dict[str, float], extra: dict[str, float]) -> float:
+    z2 = z_two_sided(p["alpha"]) ** 2
+    se = z2 * p["sensitivity"] * (1 - p["sensitivity"]) / p["d"] ** 2
+    extra["n_diseased"] = se
+    extra["n_sensitivity"] = se / p["prevalence"]
+    if p.get("specificity"):
+        sp = z2 * p["specificity"] * (1 - p["specificity"]) / p["d"] ** 2
+        extra["n_non_diseased"] = sp
+        extra["n_specificity"] = sp / (1 - p["prevalence"])
+    return max(extra["n_sensitivity"], extra.get("n_specificity", 0.0))
+
+
 RAW: dict[str, Callable[[dict[str, float], dict[str, float]], float]] = {
     "single_proportion": raw_single_proportion,
     "single_mean": raw_single_mean,
@@ -250,16 +272,26 @@ RAW: dict[str, Callable[[dict[str, float], dict[str, float]], float]] = {
     "paired_mean": raw_paired_mean,
     "correlation": raw_correlation,
     "case_control_unmatched": raw_case_control,
+    "diagnostic_accuracy": raw_diagnostic_accuracy,
 }
 
 
-def compute(formula_id: str, given: dict[str, float], rate: float | None = None) -> SampleSizeResult:
-    """Compute a sample size. `rate` is the expected non-response or drop-out (0–1, or a percentage)."""
+def compute(
+    formula_id: str, given: dict[str, float], rate: float | None = None, design_effect: float | None = None
+) -> SampleSizeResult:
+    """Compute a sample size. `rate` is the expected non-response or drop-out (0–1, or a percentage).
+    `design_effect` (DEFF > 1, cluster or multistage sampling) multiplies the raw n before rounding and attrition."""
     params, _ = prepare_params(formula_id, given)
     extra: dict[str, float] = {}
     raw = RAW[formula_id](params, extra)
-    n1 = ceil_n(raw)
-    n2 = ceil_n(params["r"] * raw) if FORMULAS[formula_id].groups == 2 else None
+    deff = float(design_effect) if design_effect else 1.0
+    if not 1.0 <= deff <= 10.0:
+        raise SampleSizeError(f"design effect must be between 1 and 10, got {design_effect}")
+    if deff > 1.0:
+        extra["design_effect"] = deff
+        extra["raw_before_deff"] = raw
+    n1 = ceil_n(raw * deff)
+    n2 = ceil_n(params["r"] * raw * deff) if FORMULAS[formula_id].groups == 2 else None
     rate = normalise_rate(rate)
     final_n1 = inflate(n1, rate)
     final_n2 = inflate(n2, rate) if n2 is not None else None
@@ -299,6 +331,7 @@ WORDS = {
         "group1": "group 1",
         "group2": "group 2",
         "rate": "Allowing for an expected non-response or drop-out rate of {pct}%",
+        "deff": "Design effect (cluster sampling)",
         "final": "Final sample size",
         "total": "in total",
         "participants": "participants",
@@ -317,6 +350,7 @@ WORDS = {
         "group1": "گروه ۱",
         "group2": "گروه ۲",
         "rate": "با در نظر گرفتن ریزش یا عدم پاسخ‌دهی مورد انتظار {pct} درصد",
+        "deff": "اثر طرح (نمونه‌گیری خوشه‌ای)",
         "final": "حجم نمونه نهایی",
         "total": "در مجموع",
         "participants": "نفر",
@@ -340,6 +374,9 @@ SYMBOLS = {
     "p1": "p₁",
     "p2": "p₂",
     "odds_ratio": "OR",
+    "sensitivity": "Se",
+    "specificity": "Sp",
+    "prevalence": "Prev",
 }
 
 
@@ -377,6 +414,14 @@ def substitution(result: SampleSizeResult) -> str:
             f"{fmt(p1)}; n₁ (two proportions, p₁ = {fmt(p1)}, p₂ = {fmt(p['p0'])}, Z(1−α/2) = {za}, "
             f"Z(1−β) = {zb}, r = {fmt(p['r'])}) = {raw}"
         )
+    if f == "diagnostic_accuracy":
+        text = (f"n(Se) = {za}² × {fmt(p['sensitivity'])} × (1 − {fmt(p['sensitivity'])}) / ({fmt(p['d'])}² × "
+                f"{fmt(p['prevalence'])}) = {fmt(result.extra['n_diseased'], 2)} / {fmt(p['prevalence'])} = "
+                f"{fmt(result.extra['n_sensitivity'], 2)}")
+        if "n_specificity" in result.extra:
+            text += (f"; n(Sp) = {za}² × {fmt(p['specificity'])} × (1 − {fmt(p['specificity'])}) / ({fmt(p['d'])}² × "
+                     f"(1 − {fmt(p['prevalence'])})) = {fmt(result.extra['n_specificity'], 2)}; n = max = {raw}")
+        return text
     # two_proportions
     return f"n₁ (p₁ = {fmt(p['p1'])}, p₂ = {fmt(p['p2'])}, Z(1−α/2) = {za}, Z(1−β) = {zb}, r = {fmt(p['r'])}) = {raw}"
 
@@ -396,6 +441,9 @@ def worked_calculation(result: SampleSizeResult, sources: dict[str, str], lang: 
         values.append(f"{SYMBOLS.get(name, name)} = {fmt(value)} ({source_text})")
     lines.append(f"{w['values']}: " + "; ".join(values))
     lines.append(f"{w['substituted']}: {substitution(result)}")
+    if result.extra.get("design_effect"):
+        deff = result.extra["design_effect"]
+        lines.append(f"{w['deff']}: {fmt(result.raw_n1, 2)} × {fmt(deff, 2)} = {fmt(result.raw_n1 * deff, 2)}")
     lines.append(rounded_line(result, w))
     if result.rate:
         lines.append(rate_line(result, w))

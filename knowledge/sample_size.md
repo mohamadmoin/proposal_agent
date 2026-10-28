@@ -23,6 +23,7 @@ Notation: Z₁₋α/₂ = 1.96 for α = 0.05 (two-sided); Z₁₋β = 0.8416 for
 | `paired_mean` | before–after in the same people | σ_d (SD of the differences), Δ, α, power | n = ((Z₁₋α/₂ + Z₁₋β)·σ_d / Δ)². Total n. |
 | `correlation` | detect a correlation r | r, α, power | C = ½·ln((1 + r)/(1 − r)); n = ((Z₁₋α/₂ + Z₁₋β)/C)² + 3. Total n. |
 | `case_control_unmatched` | unmatched case-control | p₀ (exposure among controls), OR, α, power, r = controls per case (default 1) | p₁ = OR·p₀ / (1 + p₀·(OR − 1)); then `two_proportions` with p₁ (cases), p₂ = p₀ (controls) |
+| `diagnostic_accuracy` | estimate sensitivity (and specificity) of a test with precision d (Buderer) | Se, Prev (expected prevalence of the target condition in the intended-use population), d, α; optional Sp | n(Se) = Z₁₋α/₂²·Se(1−Se) / (d²·Prev); n(Sp) = Z₁₋α/₂²·Sp(1−Sp) / (d²·(1−Prev)); n = max. Total n. Never use `single_proportion` on the total sample for sensitivity: its precision depends on the diseased participants only. |
 
 Non-response / drop-out: n_final = ⌈ n / (1 − rate) ⌉, applied per group, when a rate is given.
 
@@ -41,6 +42,7 @@ asked to check whether the smallest clinically important difference (or an accep
 | paired_mean | σ_d = 8, Δ = 4, power 0.8 | 31.40 | 32 |
 | correlation | r = 0.3, power 0.8 | 84.93 | 85 |
 | case_control_unmatched | p₀ = 0.3, OR = 2, power 0.8 | p₁ = 0.4615; 140.66 | 141 cases + 141 controls |
+| diagnostic_accuracy | Se = 0.85, Sp = 0.9, Prev = 0.45, d = 0.06 | n(Se) = 302.34, n(Sp) = 174.61 | 303 |
 
 Learn more: Kirkwood & Sterne, *Essential Medical Statistics*, ch. 35; OpenEpi sample-size calculators
 (https://www.openepi.com/).

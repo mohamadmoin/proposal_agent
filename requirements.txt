@@ -2,6 +2,8 @@
 Django==5.2.18
 django-ninja==1.7.1
 pydantic==2.14.1
+# The agentic engine (PROPOSAL_ENGINE=agentic): a tool-using lead agent with cheap worker agents (engine/agentic).
+pydantic-ai-slim[google,openai]==2.56.0
 dj-database-url==3.1.2
 mysqlclient==2.3.0
 openai==3.37.0

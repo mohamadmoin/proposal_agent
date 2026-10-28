@@ -1,0 +1,81 @@
+{
+ "pmc_id": "PMC1234567",
+ "title": "Vitamin D in pregnancy: a cohort",
+ "abstract": "Background. Deficiency was common.",
+ "sections": [
+  {
+   "title": "Methods",
+   "kind": "methods",
+   "text": "We enrolled 400 women."
+  },
+  {
+   "title": "Results",
+   "kind": "results",
+   "text": "Baseline data are in Table 1.\n\nBaseline characteristics by group\n\nDeficiency: 25(OH)D < 20 ng/mL.\n\nInline: A12.3 after."
+  }
+ ],
+ "body_available": true,
+ "note": "",
+ "tables": [
+  {
+   "label": "Table 1",
+   "caption": "Baseline characteristics by group",
+   "header": [
+    [
+     "Variable",
+     "Deficient (n = 158)",
+     "Deficient (n = 158)",
+     "Sufficient (n = 242)",
+     "Sufficient (n = 242)"
+    ],
+    [
+     "Variable",
+     "n",
+     "%",
+     "n",
+     "%"
+    ]
+   ],
+   "rows": [
+    [
+     "Age < 25 y",
+     "61",
+     "38.6",
+     "70",
+     "28.9"
+    ],
+    [
+     "Season",
+     "41",
+     "25.9",
+     "39",
+     "16.1"
+    ],
+    [
+     "Season",
+     "117",
+     "74.1",
+     "203",
+     "83.9"
+    ]
+   ],
+   "footnotes": [
+    "Deficiency: 25(OH)D < 20 ng/mL."
+   ],
+   "section": "Results"
+  },
+  {
+   "label": "",
+   "caption": "",
+   "header": [],
+   "rows": [
+    [
+     "A",
+     "12.3"
+    ]
+   ],
+   "footnotes": [],
+   "section": "Results"
+  }
+ ]
+}

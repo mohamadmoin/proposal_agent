@@ -93,7 +93,8 @@ def check_sample_size(result: dict[str, Any]) -> Check:
     if not size:
         reason = methods.get("sample_size_error") or "design without a sample-size formula"
         return Check("sample_size_matches", None if not methods.get("sample_size_error") else False, reason)
-    recomputed = compute(size["formula"], size["params"], size.get("rate")).final_total
+    deff = (size.get("extra") or {}).get("design_effect")
+    recomputed = compute(size["formula"], size["params"], size.get("rate"), design_effect=deff).final_total
     section = next((s for s in methods.get("subsections", []) if s.get("id") == "sample_size"), {})
     stated = contains_number(section.get("text", ""), size["final_total"])
     ok = stated and recomputed == size["final_total"]

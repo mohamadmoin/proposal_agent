@@ -39,7 +39,7 @@ def test_checks_catch_problems(fake_llm, offline_pubmed, now):
 def test_eval_set_has_one_title_per_design(knowledge):
     items = yaml.safe_load(open("evals/titles.yaml", encoding="utf-8"))["titles"]
     designs = {i["design"] for i in items}
-    assert len(items) == 6 and designs == {d for d in knowledge.designs if d != "general"}
+    assert len(items) == 7 and designs == {d for d in knowledge.designs if d != "general"}
     assert all(i["fa"] and i["en"] for i in items)
 
 

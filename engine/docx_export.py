@@ -175,6 +175,62 @@ def write_methods(doc: Any, section: dict[str, Any], lang: str, rtl: bool) -> No
         for block in sub["text"].split("\n"):
             if block.strip():
                 add_paragraph(doc, block.strip(), rtl)
+    write_methods_extras(doc, section, lang, rtl)
+
+
+def label_map(key: str, lang: str) -> dict[str, str]:
+    return dict(item.split("=", 1) for item in title(key, lang).split("|"))
+
+
+def add_table(doc: Any, headers: list[str], rows: list[list[str]], rtl: bool,
+              shade: list[list[bool]] | None = None) -> None:
+    """A bordered table; right-to-left column order for Persian (w:bidiVisual); `shade` fills cells (timeline)."""
+    table = doc.add_table(rows=1 + len(rows), cols=len(headers))
+    table.style = "Table Grid"
+    if rtl:
+        tbl_pr = table._tbl.tblPr
+        tbl_pr.append(OxmlElement("w:bidiVisual"))
+    for r, values in enumerate([headers, *rows]):
+        for c, value in enumerate(values):
+            cell = table.rows[r].cells[c]
+            paragraph = cell.paragraphs[0]
+            if rtl:
+                set_paragraph_rtl(paragraph)
+            style_run(paragraph.add_run(str(value)), rtl, size=BODY_PT - 2, bold=(r == 0))
+            if r > 0 and shade and shade[r - 1][c]:
+                shd = OxmlElement("w:shd")
+                shd.set(qn("w:val"), "clear")
+                shd.set(qn("w:color"), "auto")
+                shd.set(qn("w:fill"), "A6A6A6")
+                cell._tc.get_or_add_tcPr().append(shd)
+
+
+def write_methods_extras(doc: Any, section: dict[str, Any], lang: str, rtl: bool) -> None:
+    """Variables table, ethics and timeline (agentic engine, AGT-10); absent fields are skipped."""
+    variables = section.get("variables") or []
+    if variables:
+        add_heading(doc, title("variables", lang), rtl, level=2)
+        roles, types = label_map("role", lang), label_map("vtype", lang)
+        rows = [[str(i), v.get("name", ""), roles.get(v.get("role", ""), v.get("role", "")),
+                 types.get(v.get("type", ""), v.get("type", "")), v.get("unit_or_categories", ""),
+                 v.get("definition", ""), v.get("measurement", "")] for i, v in enumerate(variables, start=1)]
+        add_table(doc, title("var_cols", lang).split("|"), rows, rtl)
+    ethics = [e for e in section.get("ethics") or [] if str(e).strip()]
+    if ethics:
+        add_heading(doc, title("ethics", lang), rtl, level=2)
+        for number, item in enumerate(ethics, start=1):
+            add_paragraph(doc, f"{number}. {item}", rtl)
+    timeline = section.get("timeline") or []
+    months = int(section.get("duration_months") or max([t.get("end_month", 0) for t in timeline] or [0]))
+    if timeline and months:
+        add_heading(doc, title("timeline", lang), rtl, level=2)
+        headers = title("time_cols", lang).split("|") + [str(m) for m in range(1, months + 1)]
+        rows, shade = [], []
+        for i, t in enumerate(timeline, start=1):
+            start, end = int(t.get("start_month", 0)), int(t.get("end_month", 0))
+            rows.append([str(i), t.get("activity", "")] + [""] * months)
+            shade.append([False, False] + [start <= m <= end for m in range(1, months + 1)])
+        add_table(doc, headers, rows, rtl, shade)
 
 
 def write_references(doc: Any, references: list[dict[str, Any]], lang: str, rtl: bool) -> None:

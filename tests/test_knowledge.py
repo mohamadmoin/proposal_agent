@@ -61,15 +61,16 @@ def test_normalise_label():
 
 def test_resolve_design_known_unknown_and_other(knowledge):
     assert resolve_design(knowledge, "Cohort").label == "cohort"
-    unknown = resolve_design(knowledge, "Diagnostic accuracy")
-    assert unknown.label == "general" and unknown.other_name == "Diagnostic accuracy"
-    assert unknown.name(knowledge, "fa") == "Diagnostic accuracy"
+    assert resolve_design(knowledge, "Diagnostic accuracy").label == "diagnostic_accuracy"
+    unknown = resolve_design(knowledge, "Case series")
+    assert unknown.label == "general" and unknown.other_name == "Case series"
+    assert unknown.name(knowledge, "fa") == "Case series"
     other = resolve_design(knowledge, "other", "Qualitative study")
     assert other.label == "general" and other.name(knowledge, "en") == "Qualitative study"
     assert resolve_design(knowledge, "") is None
 
 
 def test_general_template_gets_the_full_design_name(knowledge):
-    choice = resolve_design(knowledge, "other", "Diagnostic accuracy study")
+    choice = resolve_design(knowledge, "other", "Case series")
     text = section_instruction(knowledge, choice, "conduct", "en")
-    assert "Diagnostic accuracy study" in text and "{design_name}" not in text
+    assert "Case series" in text and "{design_name}" not in text

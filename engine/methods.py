@@ -152,7 +152,11 @@ def find_topic_papers(
         store.log_search(STEP, lane, query, 0, [], error=str(exc))
         return []
     store.log_search(STEP, lane, query, result.count, result.pmids)
-    records = [r for r in pubmed.efetch(result.pmids) if not drop_reason(r)] if result.pmids else []
+    try:
+        records = [r for r in pubmed.efetch(result.pmids) if not drop_reason(r)] if result.pmids else []
+    except Exception as exc:  # one failed topic must not fail the methods section (AGT-3.1)
+        store.warn(f"A methods topic search could not fetch its papers and was skipped: {exc}", STEP)
+        return []
     scores = tfidf_scores(
         [f"{r.title} {r.title} {r.abstract}" for r in records], f"{query} {profile_query_text(profile)}"
     )

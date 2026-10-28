@@ -94,8 +94,18 @@ def run(
     now: datetime,
     options: RunOptions | None = None,
     knowledge: Knowledge | None = None,
+    engine_env: dict[str, str] | None = None,
+    services: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Run the selected sections and return the result (also saved through `store.save_result`)."""
+    """Run the selected sections and return the result (also saved through `store.save_result`).
+
+    PROPOSAL_ENGINE=agentic (in `engine_env`, else the environment) runs the agentic engine instead; same contract."""
+    env = os.environ if engine_env is None else engine_env
+    if (env.get("PROPOSAL_ENGINE") or "pipeline").strip().lower() == "agentic":
+        from engine.agentic.run import run_agentic
+
+        return run_agentic(request, store, pubmed, now, options, knowledge or llm.knowledge, env=env,
+                           services=services)
     options = options or RunOptions.from_env()
     knowledge = knowledge or llm.knowledge
     meter = UsageMeter(store)
@@ -299,8 +309,10 @@ def finish(
     now: datetime,
     profile: StudyProfileOut | None,
     design: tuple[DesignChoice, dict[str, Any]] | None,
+    extra: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Number the citations, enforce "never done and empty", compute the job status and save the result."""
+    """Number the citations, enforce "never done and empty", compute the job status and save the result.
+    `extra` adds top-level fields (the agentic engine's trace under "agent")."""
     lang = request.language
     for step in sorted(set(meter.fallbacks)):
         store.warn(f"The strong model did not answer for the {step} step; the small model wrote it instead.", step)
@@ -334,6 +346,7 @@ def finish(
         "references": numbering.references,
         "unknown_tokens": numbering.unknown_tokens,
         "usage": meter.totals(),
+        **(extra or {}),
     }
     store.save_result(result)
     return result

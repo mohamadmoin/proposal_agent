@@ -38,3 +38,9 @@ titles:
     fa: "شیوع عفونت هلیکوباکتر پیلوری در ایران: مرور نظام‌مند و فراتحلیل"
     en: "Prevalence of Helicobacter pylori infection in Iran: a systematic review and meta-analysis"
     purpose: "To pool published prevalence estimates of H. pylori infection in Iran."
+
+  - id: diagnostic_accuracy
+    design: diagnostic_accuracy
+    fa: "دقت تشخیصی سونوگرافی در تشخیص آپاندیسیت حاد در کودکان مراجعه‌کننده به اورژانس بیمارستان کودکان تبریز"
+    en: "Diagnostic accuracy of ultrasonography for acute appendicitis in children presenting to the emergency department of Tabriz Children's Hospital"
+    purpose: "To estimate the sensitivity and specificity of ultrasound against pathology or follow-up."
