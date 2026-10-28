@@ -104,6 +104,11 @@ def run_agentic(
             meter({"step": "agent:lead", "tier": "strong", "model": msg.model_name or lead_name, "status": "ok",
                    "prompt_tokens": msg.usage.input_tokens, "completion_tokens": msg.usage.output_tokens,
                    "cached_tokens": msg.usage.cache_read_tokens})
+    if report is not None:
+        state.log("review", "finished")
+    elif "UsageLimitExceeded" in error:
+        state.log("review", "stopped_budget")
+    state.close_plan(ok=report is not None or all(k in state.drafts for k in ("aims", "methods", "introduction")))
     if error:
         store.step_failed("agent", error)
     else:

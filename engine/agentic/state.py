@@ -120,6 +120,33 @@ class ResearchState:
             self.store.step_failed(step, note or "blocked")
         return item
 
+    def log(self, plan_id: str, kind: str, **fields: Any) -> None:
+        """A short factual event for the live proposal page, attached to a plan step. Written by code from tool
+        results (S5, AGT-33): structured fields, so the page words it in its own language. A step that receives an
+        event while still 'todo' starts."""
+        item = {"kind": kind, "at": round(time.time(), 1),
+                **{k: v for k, v in fields.items() if v not in (None, "", [], {})}}
+        with self._lock:
+            plan = next((p for p in self.plan if p.id == plan_id), None)
+        if plan is not None and plan.status == "todo":
+            self.update_plan(plan_id, "doing")
+        emit = getattr(self.store, "step_event", None)
+        if emit is not None:
+            emit(f"plan:{plan_id}", item)
+
+    def close_plan(self, ok: bool) -> None:
+        """At the end of a run no step stays running: a step in progress is done (or failed when the run stopped),
+        one never started is skipped."""
+        with self._lock:
+            items = list(self.plan)
+        for item in items:
+            if item.status == "doing":
+                self.update_plan(item.id, "done" if ok else "blocked", item.note or ("" if ok else "stopped"))
+            elif item.status == "todo":
+                skip = getattr(self.store, "step_skipped", None)
+                if skip is not None:
+                    skip(f"plan:{item.id}")
+
     # ---------------------------------------------------------------- decisions
     def record_decision(self, key: str, value: str, rationale: str = "", evidence: list[str] | None = None) -> Decision:
         with self._lock:
@@ -161,7 +188,6 @@ class ResearchState:
         with self._lock:
             task = Task(id=f"T{len(self.tasks) + 1}", kind=kind, summary=summary, model=model)
             self.tasks[task.id] = task
-        self.store.step_started(f"task:{task.id}:{kind}", summary)
         return task
 
     def finish_task(self, task: Task, result: str, usage: Any = None, failed: bool = False) -> None:
@@ -172,10 +198,6 @@ class ResearchState:
             if usage is not None:
                 task.input_tokens = getattr(usage, "input_tokens", 0) or 0
                 task.output_tokens = getattr(usage, "output_tokens", 0) or 0
-        if failed:
-            self.store.step_failed(f"task:{task.id}:{task.kind}", result[:300])
-        else:
-            self.store.step_done(f"task:{task.id}:{task.kind}", result[:300])
 
     # ---------------------------------------------------------------- warnings and drafts
     def warn(self, message: str, step: str = "") -> None:

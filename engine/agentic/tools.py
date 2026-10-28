@@ -201,6 +201,8 @@ def define_study(ctx: RunContext[AgentDeps], profile: StudyProfileOut) -> dict[s
     ctx.deps.profile = profile
     ctx.deps.state.store.save_profile(profile.model_dump())
     ctx.deps.state.record_decision("study", profile.english_title, f"{profile.population} | {profile.outcomes}")
+    ctx.deps.state.log("define", "defined", title=profile.english_title[:160], population=profile.population[:120],
+                       outcome=profile.outcomes[:120], query=profile.core_query[:240])
     ctx.deps.state.update_plan("define", "done", profile.english_title[:80])
     return with_workspace(ctx, {"ok": True})
 
@@ -226,6 +228,8 @@ def choose_design(ctx: RunContext[AgentDeps], label: str, rationale: str, other_
     deps.design, deps.design_record = choice, record
     deps.state.store.save_design(record)
     deps.state.record_decision("design", choice.label if choice.label != GENERAL else choice.other_name, rationale)
+    deps.state.log("design", "design", label=choice.label, name_fa=choice.name(knowledge, "fa"),
+                   name_en=choice.name(knowledge, "en"), source=source, rationale=rationale[:200])
     deps.state.update_plan("design", "done", choice.name(knowledge, "en"))
     design = knowledge.design(choice.label)
     lang = deps.lang
@@ -302,6 +306,8 @@ async def find_studies(ctx: RunContext[AgentDeps],
         raise ModelRetry("Call define_study and choose_design before find_studies.")
     state, store = deps.state, deps.state.store
     now_year = deps.now.year
+    step = {"background": "literature", "evidence": "evidence", "introduction": "introduction"}[purpose]
+    state.log(step, "searching", purpose=purpose, query=(query or deps.profile.core_query)[:240], need=need[:140])
     if purpose == "background":
         design = deps.knowledge.design(deps.design.label)
         ranked = await asyncio.to_thread(search_and_cut, deps.profile, design.pubmed_filter, deps.pubmed, store,
@@ -319,6 +325,7 @@ async def find_studies(ctx: RunContext[AgentDeps],
             return with_workspace(ctx, {"ok": False, "error": f"PubMed search failed: {exc}",
                                         "hint": "Try a simpler query or continue with what you have."})
         store.log_search("agent:evidence", "evidence", query, result.count, result.pmids)
+        state.log(step, "search", purpose=purpose, query=query[:240], count=result.count)
         kept, _ = retrieval.cut(fetched, {"evidence": result.pmids}, f"{query} {need}", EVIDENCE_TOP)
         records = [r.record for r in kept]
         lanes = {r.record.pmid: r.lanes for r in kept}
@@ -345,6 +352,11 @@ async def find_studies(ctx: RunContext[AgentDeps],
         paper = state.add_paper(role, cand.record, lanes=list(cand.lanes), stage="selected")
         state.screen(paper.token, cand.screening, selected=True)
         out.append({"id": paper.token, **_brief(cand.record, cand.screening)})
+    state.log(step, "screened", purpose=purpose, screened=len(records), kept=len(out))
+    for o in out:
+        state.log(step, "paper", purpose=purpose, token=o["id"], pmid=o["pmid"], title=o["title"], year=o["year"],
+                  design=o.get("design"), n=o.get("n"), country=o.get("country"), aim=o.get("aim_similarity"),
+                  population=o.get("population_similarity"))
     if purpose == "background":
         state.update_plan("literature", "done", f"{len(out)} similar studies kept")
     return with_workspace(ctx, {"ok": True, "purpose": purpose, "screened": len(records), "kept": out})
@@ -363,6 +375,8 @@ async def extract_data(ctx: RunContext[AgentDeps], paper_ids: list[str], quantit
         raise ModelRetry(f"Unknown paper ids {unknown}; use P# ids from the workspace.")
     if not quantities:
         raise ModelRetry("List the quantities you need, e.g. ['prevalence of X', 'SD of Y'].")
+
+    state.log("evidence", "extracting", papers=len(paper_ids), quantities=[q[:60] for q in quantities[:4]])
 
     def job(pid: str):
         record = state.papers[pid].record
@@ -394,6 +408,14 @@ async def extract_data(ctx: RunContext[AgentDeps], paper_ids: list[str], quantit
     need_ft = [p for p in paper_ids if deps.fulltext and state.papers[p].record.pmcid
                and (p not in found_in or len([s for s in stored if s["paper"] == p]) < len(quantities))]
     ft_stored, ft_rejected, ft_read = await _extract_full_texts(ctx, need_ft, quantities)
+    for s_ in stored + ft_stored:
+        state.log("evidence", "value", token=s_["paper"], quantity=str(s_["quantity"])[:90], value=s_["value"],
+                  unit=s_["unit"], group=str(s_.get("group") or "")[:40],
+                  source="full_text" if s_.get("from") else "abstract",
+                  locator=(s_.get("from") or "").removeprefix("full text "))
+    if rejected + ft_rejected:
+        state.log("evidence", "rejected", count=rejected + ft_rejected)
+    state.update_plan("evidence", "done", f"{len(state.evidence)} values")
     return with_workspace(ctx, {"ok": True, "stored": stored + ft_stored,
                                 "rejected_unverifiable": rejected + ft_rejected,
                                 "full_texts_read": ft_read})
@@ -430,6 +452,9 @@ async def _extract_full_texts(ctx: RunContext[AgentDeps], paper_ids: list[str],
                                 deps.workers.model_name)
 
     ids = list(passages)
+    for pid in ids:
+        state.log("evidence", "full_text", token=pid, pmcid=state.papers[pid].record.pmcid,
+                  tables=len({k.split(".")[0] for k in passages[pid].lines if k.startswith("T")}))
     outputs = await gather_limited([job(p) for p in ids], deps.workers.max_parallel)
     stored, rejected = [], 0
     for pid, out in zip(ids, outputs, strict=True):
@@ -564,6 +589,12 @@ def compute_sample_size(ctx: RunContext[AgentDeps], formula: str, params: dict[s
         "design_effect_reason": design_effect_reason, "combine_justification": combine_justification,
     }
     deps.state.bump("sample_size")
+    deps.state.log("sample_size", "computed", formula=formula,
+                   formula_fa=samplesize.FORMULAS[formula].label.get("fa"), formula_en=samplesize.FORMULAS[formula].label.get("en"),
+                   n=result.final_total, per_group=result.final_n1 if result.n2 is not None else None,
+                   params={k: (f"{v:g}" + (f" {sources[k]}" if sources.get(k, "").startswith("{") else ""))
+                           for k, v in result.params.items()},
+                   feasibility=bool(feasibility))
     deps.state.update_plan("sample_size", "done" if not feasibility else "doing", f"n={result.final_total}")
     deps.state.record_decision("sample_size", f"{formula}: n={result.final_total}", reasoning,
                                [s.strip("{}") for s in sources.values() if s.startswith("{")])
@@ -588,6 +619,8 @@ async def write_study_paragraphs(ctx: RunContext[AgentDeps], paper_ids: list[str
     unknown = [p for p in paper_ids if p not in state.papers]
     if unknown:
         raise ModelRetry(f"Unknown paper ids {unknown}.")
+    if paper_ids:
+        state.log("background", "writing", papers=len(paper_ids))
     title = deps.request.title
 
     async def write_one(pid: str) -> dict[str, Any]:
@@ -641,6 +674,9 @@ async def write_study_paragraphs(ctx: RunContext[AgentDeps], paper_ids: list[str
             deps.background_paragraphs[r["token"]] = r
     state.save_draft("background", {"paragraphs": list(deps.background_paragraphs)})
     state.update_plan("background", "done", f"{len(deps.background_paragraphs)} paragraphs")
+    for r in results:
+        state.log("background", "paragraph", token=r["token"], words=len(r["text"].split()) if r["text"] else 0,
+                  flagged=r["flags"] or None, failed=not r["text"] or None)
     duplicates = possible_duplicates(state, sorted(deps.background_paragraphs, key=lambda t: int(t[1:])))
     for a, b in duplicates:
         state.warn(f"{a} and {b} may report the same trial or sample", "background")

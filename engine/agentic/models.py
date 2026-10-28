@@ -27,6 +27,22 @@ DEFAULTS = {
     "worker": ("gemini-3.1-flash-lite", "low"),
     "fallback": ("gpt-5.4-mini", "low"),
 }
+# (input, output, cached input) US$ per 1M tokens, Google/OpenAI pricing pages checked 2026-10-28 (list prices)
+PRICES = {"gemini-3.8-flash": (0.75, 3.75, 0.075), "gemini-3.1-flash-lite": (0.25, 1.50, 0.025),
+          "gpt-5.4-mini": (0.75, 4.50, 0.075)}
+
+
+def call_cost(record: dict) -> float:
+    """US$ of one logged model call at list prices (cached input at the cached price); 0 for unknown models."""
+    name = next((k for k in PRICES if k in str(record.get("model", ""))), None)
+    if not name:
+        return 0.0
+    pin, pout, pcache = PRICES[name]
+    cached = record.get("cached_tokens") or 0
+    fresh = max(0, (record.get("prompt_tokens") or 0) - cached)
+    return fresh * pin / 1e6 + cached * pcache / 1e6 + (record.get("completion_tokens") or 0) * pout / 1e6
+
+
 # "minimal" is rejected by gemini-3.8-flash with HTTP 400 (dose_calculator AGENT_MODEL_LATENCY note, 2026-10-21)
 THINKING_LEVELS = {"low", "medium", "high"}
 

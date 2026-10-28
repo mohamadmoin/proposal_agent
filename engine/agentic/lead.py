@@ -151,12 +151,33 @@ def last_chance(ctx: RunContext[T.AgentDeps]) -> bool:
     return getattr(ctx, "retry", 0) >= getattr(ctx, "max_retries", 1 << 30)
 
 
+RETURN_CODES = (  # short reasons for the live page (AGT-33): a rule's message → a code the page words
+    ("not in the cited paper", "numbers"), ("has no citation", "uncited"), ("have no source", "uncited"),
+    ("unknown paper tokens", "tokens"), ("sources, tools or model", "meta"), ("do not name authors", "authors"),
+    ("placeholders", "placeholder"), ("have passed", "dates"), ("already done", "validation"),
+    ("workspace ids", "ids"), ("too short", "length"), ("exactly one of each", "aims_mapping"),
+    ("hypothesis", "hypotheses"), ("final n", "sample_size_text"), ("Major review issues", "review_open"),
+    ("different papers are cited", "few_sources"), ("ethics", "ethics"), ("timeline", "timeline"),
+)
+
+
+def return_codes(message: str) -> list[str]:
+    codes = [code for needle, code in RETURN_CODES if needle in message]
+    return sorted(set(codes)) or ["other"]
+
+
+def plan_step(where: str) -> str:
+    return "methods" if where.startswith("methods") else where if where in ("aims", "introduction") else "review"
+
+
 def reject(ctx: RunContext[T.AgentDeps], where: str, message: str) -> None:
     """Send the text back to the lead (ModelRetry). On the tool's final attempt keep it instead, with the open problems
     as a warning: a stubborn rule must never end the run and lose the section."""
     if last_chance(ctx):
         ctx.deps.state.warn(f"The {where} was kept on its last attempt with open problems: {message[:400]}", "agent")
+        ctx.deps.state.log(plan_step(where), "kept_with_problems", codes=return_codes(message))
         return
+    ctx.deps.state.log(plan_step(where), "returned", codes=return_codes(message))
     raise ModelRetry(message)
 
 
@@ -232,6 +253,8 @@ def submit_aims(ctx: RunContext[T.AgentDeps], aims: AimsIn) -> dict[str, Any]:
                       *aims.practical_aims])
     check_text(ctx, text, "aims", study_period=True)
     ctx.deps.state.save_draft("aims", aims.model_dump())
+    ctx.deps.state.log("aims", "accepted", aims=n, hypotheses=sum(h.applicable for h in aims.hypotheses),
+                       questions=len(aims.questions))
     ctx.deps.state.update_plan("aims", "done", f"{n} aims")  # automatic: the lead need not mark it
     return T.with_workspace(ctx, {"ok": True})
 
@@ -274,6 +297,9 @@ def submit_methods(ctx: RunContext[T.AgentDeps], methods: MethodsIn) -> dict[str
         # only cited sentences are checked against papers; uncited numbers describe this study's own plan
         check_text(ctx, sub.text, f"methods sub-section {sub.id}", allowed=allowed, study_period=True)
     deps.state.save_draft("methods", methods.model_dump())
+    deps.state.log("methods", "accepted", variables=len(methods.variables), ethics=len(methods.ethics),
+                   months=methods.duration_months, activities=len(methods.timeline),
+                   words=sum(len(x.text.split()) for x in methods.subsections))
     deps.state.update_plan("methods", "done", f"{len(methods.variables)} variables")
     return T.with_workspace(ctx, {"ok": True})
 
@@ -302,10 +328,12 @@ async def submit_introduction(ctx: RunContext[T.AgentDeps], text: str) -> dict[s
     deps.state.save_draft("introduction", {"text": text})
     deps.state.update_plan("introduction", "done")
     # AGT-16: the claim check advises; its findings join the methodology review as major issues to fix or explain
+    deps.state.log("introduction", "accepted", words=len(text.split()), sources=len(set(TOKEN.findall(text))))
     deps.claim_issues = await T.check_support(ctx, [x.strip() for x in SENTENCE_END.split(text) if TOKEN.search(x)],
                                               "support of the introduction's cited claims")
     out: dict[str, Any] = {"ok": True}
     if deps.claim_issues:
+        deps.state.log("introduction", "claims_flagged", count=len(deps.claim_issues))
         out["claims_to_check"] = [f"«{f['sentence'][:160]}» {f['tokens']}: {f['verdict']}: {f['reason']}"
                                   for f in deps.claim_issues[:8]]
         out["note"] = ("An independent check of the cited abstracts doubts these claims. Correct each to what the paper "
@@ -508,6 +536,11 @@ async def review_proposal(ctx: RunContext[T.AgentDeps]) -> dict[str, Any]:
                        "fix": "Correct the claim to what the cited paper reports, cite a paper that states it, or remove "
                               "it, then submit the introduction again."})
     deps.state.reviews.append({"at": deps.state.version, "issues": issues})
+    deps.state.log("review", "reviewed", major=sum(i["severity"] == "major" for i in issues),
+                   minor=sum(i["severity"] == "minor" for i in issues), round=len(deps.state.reviews))
+    for issue in issues[:8]:  # the reviewer's own words, shortened
+        deps.state.log("review", "issue", severity=issue["severity"], section=issue["section"],
+                       problem=issue["problem"][:160])
     deps.state.update_plan("review", "done" if not issues else "doing", f"{len(issues)} issues")
     return T.with_workspace(ctx, {"ok": True, "issues": issues})
 
@@ -596,12 +629,14 @@ def build_lead(model: Model, request: ProposalRequest, knowledge: Knowledge,
             open_ = [i["id"] for i in last["issues"]
                      if i["severity"] == "major" and not deps.state.issue_resolved(i, last["at"])]
             if open_:
+                deps.state.log("review", "returned", codes=["review_open"], open=len(open_))
                 raise ModelRetry(f"Major review issues still open: {open_}. Fix each (resubmit the section) or "
                                  "record_decision(key='review:<id>') explaining why it does not apply.")
         cited = set()
         for text in draft_texts(deps):
             cited |= {deps.state.papers[t].record.pmid for t in TOKEN.findall(text) if t in deps.state.papers}
         if len(cited) < MIN_SOURCES:  # distinct PMIDs: one paper found by two searches has two tokens
+            deps.state.log("review", "returned", codes=["few_sources"], sources=len(cited))
             raise ModelRetry(f"Only {len(cited)} different papers are cited. Strengthen the problem statement with more "
                              "sources (find_studies(purpose='introduction')) and submit it again.")
         return report

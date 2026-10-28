@@ -48,6 +48,7 @@ class MemoryStore:
     papers: dict[tuple[str, str], dict[str, Any]] = field(default_factory=dict)
     sections: dict[str, dict[str, Any]] = field(default_factory=dict)
     calls: list[dict[str, Any]] = field(default_factory=list)
+    events: dict[str, list[dict[str, Any]]] = field(default_factory=dict)  # step → live-page events
     profile: dict[str, Any] = field(default_factory=dict)
     design: dict[str, Any] = field(default_factory=dict)
     result: dict[str, Any] = field(default_factory=dict)
@@ -95,6 +96,10 @@ class MemoryStore:
 
     def save_result(self, result: dict[str, Any]) -> None:
         self.result = dict(result)
+
+    def step_event(self, step: str, item: dict[str, Any]) -> None:
+        """A short factual event of a step for the live page (agentic engine); optional for other stores."""
+        self.events.setdefault(step, []).append(item)
 
     def log_call(self, record: dict[str, Any]) -> None:
         with self._lock:

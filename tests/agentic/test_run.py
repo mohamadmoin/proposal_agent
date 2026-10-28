@@ -123,13 +123,16 @@ class AgenticRunTests(unittest.TestCase):
         models = AgentModels(lead=lead or lead_script(), worker=scripted(worker_handler), names={"lead": "fake-lead"},
                              critic=scripted(lambda prompt: {"issues": []}))
         req = ProposalRequest(title="شیوع کمبود ویتامین D در زنان باردار مراجعه‌کننده به مراکز بهداشتی")
-        result = run_agentic(req, store, FakePubMed(), datetime(2026, 10, 28, tzinfo=UTC), models=models,
-                             env={"LLM_MAX_PARALLEL": "2"})
+        from unittest import mock
+        with mock.patch.object(L, "MIN_SOURCES", 5):  # the fake PubMed holds 8 papers; production needs 12
+            result = run_agentic(req, store, FakePubMed(), datetime(2026, 10, 28, tzinfo=UTC), models=models,
+                                 env={"LLM_MAX_PARALLEL": "2"})
         return result, store
 
     def test_full_run_meets_the_contract(self):
         result, store = self.run_engine()
         self.assertEqual(result["status"], "done", result.get("agent", {}).get("error"))
+        self.assertEqual(result["agent"]["error"], "")  # the lead reached finish
         self.assertEqual(list(result["sections"]), ["introduction", "aims", "background", "methods"])
         methods = result["sections"]["methods"]
         self.assertEqual([s["id"] for s in methods["subsections"]], get_knowledge().section_ids())
@@ -153,6 +156,26 @@ class AgenticRunTests(unittest.TestCase):
         self.assertGreater(result["usage"]["calls"], 10)
         self.assertTrue(any(c["step"] == "agent:lead" for c in store.calls))
         json.dumps(result)  # the result is JSON
+
+    def test_live_page_events(self):
+        """AGT-33: each plan step reports what it did, from code; no sub-task rows; no step left running."""
+        result, store = self.run_engine()
+        kinds = {step: [e["kind"] for e in items] for step, items in store.events.items()}
+        self.assertIn("defined", kinds["plan:define"])
+        self.assertIn("design", kinds["plan:design"])
+        self.assertTrue({"searching", "screened", "paper"} <= set(kinds["plan:literature"]))
+        self.assertIn("value", kinds["plan:evidence"])
+        self.assertIn("computed", kinds["plan:sample_size"])
+        self.assertIn("accepted", kinds["plan:methods"])
+        self.assertTrue({"reviewed", "finished"} <= set(kinds["plan:review"]))
+        computed = next(e for e in store.events["plan:sample_size"] if e["kind"] == "computed")
+        self.assertEqual(computed["n"], result["sections"]["methods"]["sample_size"]["final_total"])
+        self.assertFalse([s for s in store.steps if s["step"].startswith("task:")])
+        last = {}
+        for row in store.steps:
+            last[row["step"]] = row["status"]
+        self.assertFalse([k for k, v in last.items() if k.startswith("plan:") and v == "started"], last)
+        json.dumps(store.events)
 
     def test_budget_or_model_failure_fails_honestly(self):
         def broken(messages, info):
