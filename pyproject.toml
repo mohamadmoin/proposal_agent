@@ -1,6 +1,6 @@
 [project]
 name = "proposal-agent"
-version = "0.1.0"
+version = "0.2.0"
 description = "Drafts research-proposal sections for medical researchers from PubMed evidence."
 requires-python = ">=3.12"
 license = "MIT"

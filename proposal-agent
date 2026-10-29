@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+"""proposal-agent: draft a medical research proposal from a title. See `./proposal-agent --help` and README.md."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from engine.cli import main  # noqa: E402
+
+sys.exit(main())

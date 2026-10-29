@@ -21,3 +21,6 @@ staticfiles/
 .DS_Store
 .idea/
 .vscode/
+
+# command-line outputs
+output/

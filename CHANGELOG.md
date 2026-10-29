@@ -5,6 +5,22 @@ the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-29
+
+### Added
+- The agentic engine (`PROPOSAL_ENGINE=agentic`, `engine/agentic/`): a lead researcher agent (pydantic-ai) that
+  plans, decides and writes with the whole proposal in view through typed tools; cheap worker agents for screening,
+  extraction and one-study paragraphs; working memory (plan, decisions, evidence with source sentences, drafts);
+  submission checks with rejection reasons returned to the agent; a methodology critic and a claim-support check;
+  budgets on requests, tool calls and tokens; Gemini with an OpenAI fallback.
+- Diagnostic-accuracy design with Buderer's sample-size formula; design effect in the sample size; variables, ethics
+  and timeline in the Word file.
+- The command line `./proposal-agent` (`python -m engine.cli`): `check` and `run`, live steps, `--fake` for a keyless
+  demo, outputs `proposal.docx`, `result.json` and `trace.json`. It runs the agentic engine by default.
+
+### Fixed
+- `jdatetime` was missing from `requirements.txt` (the agentic lead checks study periods in the Persian calendar).
+
 ## [0.1.0] - 2026-10-25
 
 ### Added

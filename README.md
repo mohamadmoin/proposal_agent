@@ -38,6 +38,38 @@ For real proposals, edit `.env`: set `LLM_PROVIDER=openai` (or `gemini`), `LLM_A
 A free-tier model key allows only a few requests per minute. The app waits when the provider asks it to, so a
 proposal still finishes, but more slowly. A paid key gives a full proposal in about 1–2 minutes.
 
+## Command line: the quickest way to try it
+
+No Docker or web app needed: Python 3.12 and the requirements.
+
+```bash
+git clone https://github.com/mohamadmoin/proposal_agent.git && cd proposal_agent
+python3 -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt
+
+./proposal-agent run "شیوع کمبود ویتامین D در زنان باردار مراجعه‌کننده به مراکز بهداشتی تهران" --fake   # no keys, no network
+```
+
+`--fake` runs end to end on a built-in fake model and saved PubMed records, so the text is placeholder text. For a real
+draft, give it a model key and PubMed details (in the shell or in `.env`), check, and run:
+
+```bash
+export GOOGLE_API_KEY=…          # Gemini (required); OPENAI_API_KEY=… is optional, the fallback
+export NCBI_EMAIL=you@example.com PUBMED_OFFLINE=0   # NCBI_API_KEY too, if you have one
+./proposal-agent check
+./proposal-agent run "your study title" --language fa
+```
+
+It prints each step as it happens and writes `output/<time>-<title>/` with `proposal.docx`, `result.json` (sections
+and references) and `trace.json` (every step, search, warning and model call, without the prompts). `--engine
+pipeline` runs the step-by-step pipeline instead of the agentic engine; `--sections aims,methods` drafts only some
+sections; `./proposal-agent run --help` lists the rest. `./proposal-agent` is the same as `python -m engine.cli`.
+
+A real agentic draft usually takes 10–15 minutes (longer on a free-tier key, which the provider throttles) and, at
+Gemini list prices, about US$0.4–0.6 per proposal.
+
+**The output is a draft. You are the author.** Check every sentence, number and reference.
+
 ## Configuration
 
 Everything is set through environment variables (`.env`, documented in `.env.example`).
@@ -53,6 +85,10 @@ Everything is set through environment variables (`.env`, documented in `.env.exa
 | `DATABASE_URL` | SQLite in `var/` | e.g. `mysql://user:pass@db:3306/proposal_agent`. Compose uses MySQL 8.4. |
 | `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_ROOT_PASSWORD` | demo values | Used by the compose `db` service; must match `DATABASE_URL`. |
 | `WEB_PORT` | `8000` | Host port of the web app in compose. |
+| `PROPOSAL_ENGINE` | `pipeline` in the web app, `agentic` in the command line | `agentic`: a lead researcher agent with cheap worker agents (below); `pipeline`: the step-by-step pipeline. |
+| `GOOGLE_API_KEY` | empty | Gemini key for the agentic engine (also read: `AGENT_GOOGLE_API_KEY`, `GEMINI_TOKEN`, or `LLM_API_KEY` when `LLM_PROVIDER=gemini`). |
+| `OPENAI_API_KEY` | empty | Optional: the agentic engine's fallback when Gemini fails. |
+| `AGENT_LEAD_THINKING` | `medium` | The lead's thinking level (`low`, `medium`, `high`). Low measured about 0.6 points lower on a 1–5 blind rating. |
 | `LLM_PROVIDER` | `openai` in code, `fake` in `.env.example` | `openai`, `gemini` (OpenAI-compatible endpoint) or `fake` (offline). |
 | `LLM_API_KEY` | empty | The provider's key. |
 | `LLM_BASE_URL` | provider default | Any OpenAI-compatible endpoint. |
@@ -73,6 +109,22 @@ Everything is set through environment variables (`.env`, documented in `.env.exa
 | `BACKGROUND_SCREEN_TOP` | `40` | Records screened by the model after the cut. |
 
 ## How it works
+
+### The agentic engine (`PROPOSAL_ENGINE=agentic`)
+
+The pipeline below calls the model once per small job, each call seeing only its own piece. Judged blind, section by
+section, that lost to a single call that saw the whole proposal. The agentic engine keeps the pipeline's knowledge,
+search code and checks, but lets one **lead researcher** model (default Gemini 3.8 Flash, thinking medium) plan,
+decide and write with the whole proposal in view, through about fifteen typed tools: define the study, choose the
+design (reading a design guide when needed), search PubMed for one of three purposes, extract numbers, compute the
+sample size **in code**, submit each section (code checks citations, numbers, dates and placeholders and returns the
+reason when it rejects), and ask an independent **critic** to review before it may finish. Cheap **worker** agents
+(Gemini 3.1 Flash-Lite) screen abstracts, extract values and write one-study paragraphs, so raw abstracts never fill
+the lead's context. Every run is capped at 75 model requests, 140 tool calls and 1.1 million tokens; its working
+memory (plan, decisions with reasons, evidence with source sentences, drafts) is in the result's trace. Code is in
+[`engine/agentic/`](engine/agentic/).
+
+### The pipeline (`PROPOSAL_ENGINE=pipeline`)
 
 The design principles are in [`docs/DESIGN.md`](docs/DESIGN.md); the clinician's rules are plain text and YAML in
 [`knowledge/`](knowledge/README.md), read at run time. In short: **one small job per model call, structured outputs,
