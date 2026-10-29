@@ -1,5 +1,5 @@
 # Runtime dependencies (pinned). See README "How it works" for why each one is here.
-Django==5.2.18
+Django==6.1.2
 django-ninja==1.7.1
 pydantic==2.14.1
 # The agentic engine (PROPOSAL_ENGINE=agentic): a tool-using lead agent with cheap worker agents (engine/agentic).
