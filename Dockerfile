@@ -2,7 +2,7 @@
 # Two stages: the first compiles wheels (mysqlclient needs a C compiler and headers), the second is a slim runtime
 # that only installs those wheels. The runtime image has no compiler and runs as a non-root user.
 
-FROM python:3.12-slim AS build
+FROM python:3.15-slim AS build
 RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential pkg-config default-libmysqlclient-dev \
  && rm -rf /var/lib/apt/lists/*
@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
 
 
-FROM python:3.12-slim AS runtime
+FROM python:3.15-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
